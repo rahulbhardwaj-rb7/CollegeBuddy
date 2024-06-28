@@ -1,0 +1,265 @@
+.inphamed-logo-icon {
+  position: absolute;
+  top: calc(50% - 20px);
+  left: 20px;
+  width: 181.8px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.expert-icon {
+  width: 40px;
+  position: relative;
+  border: 1px solid rgb(130, 130, 130);
+  border-radius: 7px;
+  height: 40px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.help-icon {
+  width: 40px;
+  padding: 10px;
+  position: relative;
+  border: 1px solid rgb(130, 130, 130);
+  border-radius: 7px;
+  height: 40px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.top-right-links {
+  position: absolute;
+  top: calc(50% - 20px);
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.header {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  height: 80px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+.header-search-with-advanced {
+  align-items: flex-start;
+  display: inline-flex;
+  gap: 25px;
+  position: relative;
+}
+
+.search-bar {
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.10);
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.header-search-with-advanced .header-search-box {
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 30px #0000001a;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 750px;
+}
+
+.header-search-with-advanced .header-select-region {
+  align-items: center;
+  border-color: #bcc5d5;
+  border-radius: 10px 0px 0px 10px;
+  border-right-style: solid;
+  border-right-width: 1px;
+  display: flex;
+  gap: 15px;
+  height: 46px;
+  padding: 0px 20px;
+  position: relative;
+  width: fit-content;
+}
+
+.header-search-with-advanced .div {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 15px;
+  position: relative;
+}
+
+.header-search-with-advanced .region-icon {
+  height: 17px;
+  position: relative;
+  width: 15.87px;
+}
+
+.header-search-with-advanced .header-div-wrapper {
+  height: 22px;
+  background-color: transparent;
+  color: #030229;
+  position: relative;
+  width: 100%;
+}
+
+.header-search-with-advanced .text-wrapper {
+  color: rgba(3, 2, 41, 1);
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  left: 0;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+}
+
+.header-search-with-advanced .arrow-down {
+  height: 7px;
+  position: relative;
+  width: 12px;
+}
+
+.header-search-with-advanced .header-search-area {
+  background-color: #ffffff;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 406px;
+  color: #030229;
+  border: none !important;
+}
+
+.header-search-area input {
+  width: 100%;
+  padding-left: 10px;
+  background-color: transparent;
+  color: #030229;
+  border: none !important;
+}
+
+.header-search-area input:focus {
+  outline: none;
+  border: none;
+}
+
+.globe_logo {
+  font-size: 17px;
+  color: #9e028f;
+}
+
+.header-search-with-advanced .magnifying-glass {
+  height: 17px;
+  left: 20px;
+  position: absolute;
+  top: 26px;
+  width: 17px;
+}
+
+.header-search-with-advanced .search-by-keyword {
+  height: 19px;
+  left: 47px;
+  opacity: 0.7;
+  position: absolute;
+  top: 26px;
+  width: 214px;
+}
+.header-select-region svg{
+  width: 22px;
+}
+.header-search-with-advanced select {
+  width: 72px;
+  color: #030229;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.7;
+  top: 0;
+  border: none;
+}
+
+.header-search-with-advanced select:focus {
+  outline: none;
+  border: none;
+}
+
+.header-search-with-advanced .header-search {
+  align-items: flex-start;
+  background-color: #9e028f;
+  border-radius: 0px 10px 10px 0px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: #ffffff;
+  gap: 10px;
+  padding: 12px 50px;
+  position: relative;
+}
+
+
+.header-search-with-advanced .header-learn-more {
+  position: relative;
+  border-radius: 10px;
+  background-color: #242259;
+  width: fit-content;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 30px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 16px;
+  color: #fff;
+  font-family: "Nunito", sans-serif;
+}
+
+.header-search-with-advanced .text-wrapper-2 {
+  color: #ffffff;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  width: fit-content;
+}
+
+.header-search-area {
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 25px;
+  display: inline-flex;
+  /* flex-direction: column; */
+  overflow: hidden;
+  padding-left: 20px;
+  padding-right: 10px;
+  /* padding: 0px 100px; */
+  position: relative;
+}
+
+.header-search-area .header-search-with-advanced {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 25px;
+  padding: 50px 0px;
+  position: relative;
+}
+
+/* ---------------------------------------------- */

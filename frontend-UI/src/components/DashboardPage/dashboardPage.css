@@ -1,0 +1,471 @@
+.search-bar-bg {
+    width: fit-content;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    top: -240px;
+}
+
+.custome_bg {
+    background-image: url(../../assets/images/landingPageBg.png);
+    background-size: cover;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+
+
+/* ---------------------------------------------------------------------------- */
+.link-list {
+    height: fit-content;
+    align-items: flex-start;
+    display: inline-flex;
+    justify-content: center;
+    gap: 75px;
+    padding: 40px;
+    position: relative;
+    width: 100%;
+    top: -150px;
+}
+
+.link-list .custom_div {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.link-list .donut-chart-drugs {
+    background-image: url(./ellipse-48.svg);
+    background-size: 100% 100%;
+    height: 180px;
+    position: relative;
+    width: 180px;
+}
+
+.link-list .overlap-group {
+    background-image: url(./ellipse-49.svg);
+    background-size: 100% 100%;
+    height: 172px;
+    position: relative;
+    top: 8px;
+    width: 179px;
+}
+
+.link-list .drug-icon {
+    height: 40px;
+    left: 68px;
+    position: absolute;
+    top: 62px;
+    width: 44px;
+}
+
+.link-list .content {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    position: relative;
+}
+
+.link-list .text-wrapper {
+    color: #9e028f;
+    font-family: "Nunito-Bold", Helvetica;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    text-align: center;
+    width: fit-content;
+}
+
+.link-list .text-wrapper-2 {
+    color: #242259;
+    font-family: "Nunito-ExtraBold", Helvetica;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: normal;
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+
+/* --------------------------------------------------------------  */
+.skill {
+    width: 160px;
+    height: 160px;
+    position: relative;
+}
+
+.outer {
+    width: 160px;
+    height: 160px;
+    padding: 20px;
+    background-color: #cccccc;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 50%;
+}
+
+.inner {
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+circle {
+    fill: none;
+    stroke: #9e028f;
+    stroke-width: 20px;
+    stroke-dasharray: 450;
+    stroke-dashoffset: 450;
+    animation: anima 1s linear forwards;
+}
+@keyframes anima {
+    100%{
+        stroke-dashoffset: 150;
+    }
+}
+.custome_svg {
+    position: relative;
+    top: -160px;
+    left: 0;
+}
+
+/* -------------------------------------------Search result-------------------------------------------------------- */
+.search-results-for {
+    position: relative;
+}
+.heading {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    font-size: 24px;
+}
+.brand-name {
+    flex: 1;
+    position: relative;
+    line-height: 130%;
+}
+.div {
+    width: 200px;
+    border-radius: 15px 0px 0px 0px;
+    background-color: #f5f7fa;
+    border-top: 1px solid #dce3ee;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.div1 {
+    width: 200px;
+    background-color: #f5f7fa;
+    border-top: 1px solid #dce3ee;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.div6 {
+    width: 200px;
+    border-radius: 0px 15px 0px 0px;
+    background-color: #f5f7fa;
+    border: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.row-1 {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.ibrance {
+    flex: 1;
+    position: relative;
+    line-height: 130%;
+    opacity: 0.7;
+}
+.div7 {
+    width: 200px;
+    background-color: #fff;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.palbociclib {
+    flex: 1;
+    position: relative;
+    text-decoration: underline;
+    line-height: 130%;
+    opacity: 0.7;
+}
+.div8 {
+    width: 200px;
+    background-color: #fff;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+    color: #9e028f;
+}
+.div13 {
+    width: 200px;
+    background-color: #fff;
+    border-right: 1px solid #dce3ee;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.row-2 {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+.div15 {
+    width: 200px;
+    border-radius: 0px 0px 0px 15px;
+    background-color: #fff;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.div21 {
+    width: 200px;
+    border-radius: 0px 0px 15px 0px;
+    background-color: #fff;
+    border-right: 1px solid #dce3ee;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 24px;
+}
+.search-result1 {
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0px 20px;
+}
+.paracetamol {
+    flex: 1;
+    position: relative;
+    line-height: 130%;
+    text-transform: uppercase;
+}
+.custom_table-head {
+    width: 1400px;
+    border-radius: 15px 15px 0px 0px;
+    background-color: #f5f7fa;
+    border: 1px solid #dce3ee;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 30px;
+}
+.brand-name1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.company1 {
+    position: absolute;
+    top: 0px;
+    left: 119px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.active-ingredients1 {
+    position: absolute;
+    top: 0px;
+    left: 219px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.indication1 {
+    position: absolute;
+    top: 0px;
+    left: 373px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.nda1 {
+    position: absolute;
+    top: 0px;
+    left: 474px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.approval-date1 {
+    position: absolute;
+    top: 0px;
+    left: 545px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.number-of-nda1 {
+    position: absolute;
+    top: 0px;
+    left: 677px;
+    line-height: 130%;
+    opacity: 0.5;
+}
+.brand-name-parent {
+    width: 817px;
+    position: relative;
+    height: 18px;
+    display: none;
+}
+.ibrance2 {
+    position: relative;
+    line-height: 130%;
+    font-weight: 600;
+}
+.row-1-child {
+    width: 4px;
+    position: relative;
+    border-radius: 50%;
+    background-color: #9e028f;
+    height: 4px;
+}
+.tablet {
+    position: relative;
+    line-height: 130%;
+    color: #030229;
+    opacity: 0.5;
+}
+.row-11 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+.content {
+    width: 100%;
+    position: relative;
+    height: 48px;
+    overflow: hidden;
+    flex-shrink: 0;
+    color: #242259;
+}
+.table-content {
+    width: 100%;
+    border-radius: 0px 0px 15px 15px;
+    background-color: #fff;
+    border-right: 1px solid #dce3ee;
+    border-bottom: 1px solid #dce3ee;
+    border-left: 1px solid #dce3ee;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 50px;
+    gap: 40px;
+}
+.search-result2 {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0px 20px;
+}
+.search-result {
+    position: relative;
+    top: -150px; 
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 30px 0px 60px;
+    box-sizing: border-box;
+    gap: 20px;
+    text-align: left;
+    font-size: 14px;
+    color: #030229;
+    font-family: "Nunito", sans-serif;
+}
+

@@ -1,0 +1,83 @@
+.dashboard-links {
+    background-color: #242259;
+    height: 5820px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 80px;
+  }
+
+  .drugs-selected {
+    align-items: center;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    left: 20px;
+    position: absolute;
+    top: 117px;
+  }
+
+  .img-2 {
+    height: 40px;
+    position: relative;
+    width: 40px;
+  }
+
+  .text-wrapper-35 {
+    color: #ffffff;
+    font-family: "Inter", Helvetica;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: normal;
+    position: relative;
+    text-align: center;
+    width: fit-content;
+  }
+
+  .text-wrapper-36 {
+    color: #ffffff;
+    font-family: "Inter", Helvetica;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    position: relative;
+    text-align: center;
+    width: fit-content;
+  }
+
+  .home {
+    align-items: center;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    left: 20px;
+    opacity: 0.6;
+    position: absolute;
+    top: 30px;
+  }
+
+  .history {
+    align-items: flex-start;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    left: 20px;
+    opacity: 0.6;
+    position: absolute;
+    top: 204px;
+  }
+
+  .logout {
+    align-items: flex-start;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    left: 20px;
+    opacity: 0.6;
+    position: absolute;
+    top: 291px;
+  }
+
+  
