@@ -10,8 +10,9 @@ type InputProps = {
 
 const OtpPage = ({ length = 4, otp, setOtp, onComplete }: InputProps) => {
   const handleTextChange = (input: string, index: number) => {
-    console.log('index', index, 'num', input);
-    
+    // Ensure only numeric values are allowed
+    if (!/^\d*$/.test(input)) return;
+
     const newOtp = [...otp];
     newOtp[index] = input;
     setOtp(newOtp);
@@ -27,9 +28,7 @@ const OtpPage = ({ length = 4, otp, setOtp, onComplete }: InputProps) => {
     }
 
     // Call onComplete if all digits are entered
-    if (newOtp.every((digit) => digit !== '')) {
-      onComplete(newOtp.join(''));
-    }
+    onComplete(newOtp.join(''));
   };
 
   return (

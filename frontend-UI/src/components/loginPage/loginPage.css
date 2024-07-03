@@ -357,3 +357,9 @@
   font-family: "Nunito", sans-serif;
 }
 
+.loginbtn-disabled {
+  
+  background: #9E028F !important;
+  opacity: 0.4 !important;
+}
+

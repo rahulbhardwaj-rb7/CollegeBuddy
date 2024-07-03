@@ -10,6 +10,8 @@ import MainLayout from './layouts/MainLayout/mainLayout';
 import DashboardLayout from './layouts/DashboardLayout/dashboardLayout';
 import DashboardPage from './components/DashboardPage/dashboardPage';
 import { AdminPanel } from './components/AdminPanel/adminPanel';
+import { GlobalStateProvider } from './GlobalStateContext';
+import { USAAdminPanel } from './components/USA_Admin_Panel/usaAdminPanel';
 
 const App: React.FC = () => (
   <BrowserRouter>
@@ -24,6 +26,7 @@ const App: React.FC = () => (
       <Route path="/inphamed" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="search-result" element={<AdminPanel />} />
+        <Route path="usa-search-result" element={<USAAdminPanel/>} />
       </Route>
     </Routes>
   </BrowserRouter>
@@ -31,6 +34,8 @@ const App: React.FC = () => (
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <GlobalStateProvider>
     <App />
+    </GlobalStateProvider>
   </React.StrictMode>,
 );

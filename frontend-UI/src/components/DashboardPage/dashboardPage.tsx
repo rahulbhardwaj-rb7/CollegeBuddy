@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './dashboardPage.css';
 import SearchBar from '../../layouts/SearchBar/searchBar';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import toggleSearchBar from "../../layouts/DashboardLayout/dashboardLayout"
 
-const DashboardPage: React.FC = () => {
+type OutletContextType = {
+    toggleSearchBar: (show: boolean) => void;
+    showSearchBar: boolean;
+  };
+
+const DashboardPage = () => {
+
+    const [showSearchDetails, setShowSearchDetails] = useState(false);
+    const { toggleSearchBar } = useOutletContext<OutletContextType>();
+
+    useEffect(() => {
+        toggleSearchBar(false);
+    })
+
+    const toggleSearchDetails = () => {
+        setShowSearchDetails(true);
+    }
+
+    const navigate = useNavigate();
+
+    const navigateToDetails = () => {
+        toggleSearchBar(true)
+        navigate('/inphamed/search-result');
+    }
 
 
     return (
@@ -10,11 +35,12 @@ const DashboardPage: React.FC = () => {
             <div className='custome_bg align-items-center'></div>
             <div className='search-bar-bg d-flex align-items-center justify-content-center'>
                 <div>
-                    <SearchBar />
+                    <SearchBar showSearchDetails={showSearchDetails} setShowSearchDetails={setShowSearchDetails}/>
                 </div>
             </div>
             {/* ------------------------------------------------------------ */}
-            <div className="search-result">
+            {showSearchDetails && (
+                <div className="search-result">
                 <div className="heading">
                     <b className="search-results-for">Search Results for “paracetamol” </b>
                 </div>
@@ -93,7 +119,7 @@ const DashboardPage: React.FC = () => {
                     <div className="custom_table-head">
                         <b className="paracetamol">Paracetamol</b>
                     </div>
-                    <div className="table-content">
+                    <div className="table-content" onClick={() => navigateToDetails()}>
                         <div className="brand-name-parent">
                             <div className="brand-name1">Brand Name</div>
                             <div className="company1">Company</div>
@@ -138,6 +164,7 @@ const DashboardPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            )}
             {/* --------------------------------------------------------------------------- */}
             <div className="link-list">
                 <div className="custom_div">

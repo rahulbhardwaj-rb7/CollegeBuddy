@@ -9,8 +9,19 @@ import logo from "../../assets/images/inphamed-login-logo.png"
 const SetPasswordPage = () => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleNewPassword = (event: any) => {
+    const {value} = event.target;
+    setNewPassword(value);
+  }
+
+  const handleConfirmPassword = (event: any) => {
+    const {value} = event.target;
+    setConfirmPassword(value);
+  }
+
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -24,6 +35,12 @@ const SetPasswordPage = () => {
   const routeHome = () => {
     navigate('/')
   }
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault;
+    routeHome();
+  }
+
   return (
     <div className="inphamed-login-v1">
       <img className="bg-icon" alt="" src={lg} />
@@ -42,7 +59,7 @@ const SetPasswordPage = () => {
             <Form className="mt-4">
               <Form.Group className="mb-4 text-start" controlId="formBasicEmail">
                 <Form.Label>Enter New Password</Form.Label>
-                <Form.Control type="password" placeholder="" className={`custom-input input-error`} />
+                <Form.Control type="password" placeholder="Enter new password" className={`custom-input input-error`} value={newPassword} onChange={handleNewPassword} />
               </Form.Group>
 
               {/* <Form.Group className="mb-3 position-relative" controlId="formBasicPassword"> */}
@@ -51,13 +68,15 @@ const SetPasswordPage = () => {
                 <div className="password-wrapper">
                   <Form.Control
                     type={passwordVisible ? "text" : "password"}
-                    placeholder="Password"
+                    placeholder="Confirm password"
                     className={`custom-input input-error`}
+                    value={confirmPassword}
+                    onChange={handleConfirmPassword}
                   />
                 </div>
               </Form.Group>
 
-              <Button type="submit" className="w-100 mt-4 btn-login" >
+              <Button type="submit" onClick={handleSubmit} className={`w-100 mt-4 btn-login ${(newPassword !== "" && confirmPassword !== "" && (newPassword === confirmPassword)) ? '' : 'btn-login-disabled'}`} disabled={(newPassword == "" || confirmPassword == "" || (newPassword !== confirmPassword))} >
                 <div className="log-in">Submit</div>
               </Button>
             </Form>

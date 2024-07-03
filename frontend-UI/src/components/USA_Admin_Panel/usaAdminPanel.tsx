@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./adminPanel.css";
+import "./usaAdminPanel.css";
 import { useNavigate } from "react-router-dom";
 
-export const AdminPanel = () => {
+export const USAAdminPanel = () => {
 
   const navigate = useNavigate();
   const [tabNo, setTabNo] = useState(1);
@@ -301,6 +301,15 @@ export const AdminPanel = () => {
       Status: "Closed",
       PatentNumbers: "US6936612",
     },
+    {
+      CaseNumber: "1:21-cv-00284",
+      Date: "Feb 24, 2021",
+      CourtWithJurisdiction: "Delaware District Court",
+      PlaintiffsAndDefendants: "Pfizer Inc. v. Synthon Pharmaceuticals, Inc.",
+      Decision: "",
+      Status: "Closed",
+      PatentNumbers: "US6936612",
+    },
   ];
 
   const patentLastData: any[] = [
@@ -469,7 +478,7 @@ export const AdminPanel = () => {
   };
 
   return (
-    <div className="europe-drug-profile">
+    <div className="usa-drug-profile">
       <div className="div_1">
         <div className="overlap">
         <div className="dashboard-links">
@@ -537,7 +546,7 @@ export const AdminPanel = () => {
           )}
           <div className="dashboard">
             <div className="dashboard-2">
-              <div className="div-2">
+              <div className="product-information">
                 <div className="heading">
                   <div className="headline">
                     <div className="group">
@@ -565,10 +574,10 @@ export const AdminPanel = () => {
                           <div className="table-label">Dosage Form</div>
                         </th>
                         <th>
-                          <div className="table-label">Route</div>
+                          <div className="table-label">Strength</div>
                         </th>
                         <th>
-                          <div className="table-label">Strength</div>
+                          <div className="table-label">Route</div>
                         </th>
                       </tr>
                     </thead>
@@ -630,7 +639,7 @@ export const AdminPanel = () => {
                   </table>
                 </div>
               </div>
-              <div className="div-2">
+              <div className="regulatory-information">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-2">
@@ -643,7 +652,7 @@ export const AdminPanel = () => {
                     <div className="row">
                       <div className="NDA-number">
                         <div className="text-wrapper-4">
-                          Agency Product Number
+                        NDA Number/ BLA Number
                         </div>
                       </div>
                       <div className="div-wrapper-2">
@@ -657,7 +666,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-wrapper-3">
                         <div className="text-wrapper-4">
-                          Data + Marketing Exclusivity
+                        NCE Exclusivity
                         </div>
                       </div>
                       <div className="div-wrapper-2">
@@ -666,7 +675,7 @@ export const AdminPanel = () => {
                     </div>
                     <div className="row">
                       <div className="GAIN-exclusivity">
-                        <div className="text-wrapper-6">Orphan Exclusivity</div>
+                        <div className="text-wrapper-6">GAIN Exclusivity</div>
                       </div>
                       <div className="not-applicable">
                         <p className="p">
@@ -675,7 +684,7 @@ export const AdminPanel = () => {
                         </p>
                       </div>
                       <div className="div-wrapper-4">
-                        <div className="text-wrapper-6">SPC</div>
+                        <div className="text-wrapper-6">Orphan Exclusivity</div>
                       </div>
                       <div className="not-applicable">
                         <div className="text-wrapper-5">Granted</div>
@@ -696,7 +705,7 @@ export const AdminPanel = () => {
                     <div className="row">
                       <div className="div-wrapper-therapy">
                         <p className="text-wrapper-7">
-                          Therapy Area/ Mechanism of action
+                        Therapy Area/ Mechanism of action
                         </p>
                       </div>
                       <div className="div-wrapper-6">
@@ -744,11 +753,17 @@ export const AdminPanel = () => {
                       <div className="div-wrapper-6">
                         <div className="text-wrapper-5">None</div>
                       </div>
+                      <div className="div-wrapper-7">
+                        <div className="text-wrapper-6">Citizen Petition</div>
+                      </div>
+                      <div className="div-wrapper-6">
+                        <div className="text-wrapper-5">None</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="div-4">
+              <div className="intellectual-property-patents">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-3">
@@ -763,7 +778,7 @@ export const AdminPanel = () => {
                     <div className="table">
                       <div className="patentDetailsStartingColumn">
                         <div className="element-3">
-                          <div className="text-wrapper-9">Brand name</div>
+                          <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Brand name</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div
@@ -773,7 +788,7 @@ export const AdminPanel = () => {
                                 : "element-4"
                             }
                           >
-                            <div className="text-wrapper-10">
+                            <div className="text-wrapper-10" style={{paddingTop: '0px'}}>
                               {row.BrandName}
                             </div>
                           </div>
@@ -809,7 +824,7 @@ export const AdminPanel = () => {
                         <div className="div-6">
                           <div className="element-8">
                             <div className="text-wrapper-9">
-                              Equivalent Family
+                              Dosage Form
                             </div>
                           </div>
                           {patentData.map((row, index) => (
@@ -822,7 +837,7 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-6">
                           <div className="element-8">
-                            <div className="text-wrapper-9">Patent number</div>
+                            <div className="text-wrapper-9">Strength</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-9">
@@ -835,7 +850,7 @@ export const AdminPanel = () => {
                         <div className="div-6">
                           <div className="element-10">
                             <div className="text-wrapper-9">
-                              Current Assignee
+                              Equivalent Family
                             </div>
                           </div>
                           {patentData.map((row, index) => (
@@ -848,7 +863,7 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-7">
                           <div className="element-12">
-                            <div className="text-wrapper-9">Status</div>
+                            <div className="text-wrapper-9">Patent Number</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-13">
@@ -860,7 +875,7 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-6">
                           <div className="element-14">
-                            <div className="text-wrapper-9">SPC</div>
+                            <div className="text-wrapper-9">Current Assignee</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-15">
@@ -870,7 +885,27 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-6">
                           <div className="element-14">
-                            <div className="text-wrapper-9">PED</div>
+                            <div className="text-wrapper-9">OB Listed</div>
+                          </div>
+                          {patentData.map((row, index) => (
+                            <div className="element-15">
+                              <div className="text-wrapper-11">{row.PED}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-14">
+                            <div className="text-wrapper-9">Status</div>
+                          </div>
+                          {patentData.map((row, index) => (
+                            <div className="element-15">
+                              <div className="text-wrapper-11">{row.PED}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-14">
+                            <div className="text-wrapper-9">PTE</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-15">
@@ -1004,126 +1039,278 @@ export const AdminPanel = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="div-3">
-                    <div className="div-9 w-100 property-patents-second-table">
-                      <div className="brand-name">
-                        <div className="group-4">
-                          <div className="text-wrapper-17">Brand name</div>
-                        </div>
-                      </div>
-                      <div className="active-ingredient">
-                        <div className="group-5">
-                          <div className="text-wrapper-18">
-                            Active ingredient
-                          </div>
-                        </div>
-                      </div>
-                      <div className="Country">
-                        <div className="group-5">
-                          <div className="text-wrapper-18">COUNTRY</div>
-                        </div>
-                      </div>
-                      <div className="ep">
-                        <div className="title">
-                          <div className="group-6">
-                            <div className="text-wrapper-19">EP1470124</div>
-                          </div>
-                        </div>
-                        <div className="status">
-                          <div className="group-7">
-                            <div className="text-wrapper-20">Status</div>
-                          </div>
-                        </div>
-                        <div className="expiry">
-                          <div className="group-7">
-                            <div className="text-wrapper-20">Expiry</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {patentLastData.map((row, index) => (
-                      <div className="div-9 w-100">
-                        <div
-                          className={`element-23 ${
-                            index == patentLastData.length - 1
-                              ? "round-border-left"
-                              : ""
-                          }`}
-                        >
-                          <div className="text-wrapper-10">IBRANCE</div>
-                        </div>
-                        <div className="element-24">
-                          <div className="text-wrapper-10">PALBOCICLIB</div>
-                        </div>
-                        <div className="element-25" style={{ width: "20%" }}>
-                          <div className="text-wrapper-10">AT</div>
-                        </div>
-                        <div className="element-25" style={{ width: "20%" }}>
-                          <div className="text-wrapper-10">Granted</div>
-                        </div>
-                        <div
-                          className={`element-26 ${
-                            index == patentLastData.length - 1
-                              ? "round-border-right"
-                              : ""
-                          }`}
-                        >
-                          <div className="text-wrapper-10">Jan 10, 2028</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
-              <div className="div-2">
+              <div className="us-litigation-container">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-8">
-                      <div className="text-wrapper">EP Litigation</div>
+                      <div className="text-wrapper">US Litigation</div>
                     </div>
                   </div>
                 </div>
+                <div className="d-flex">
+                <div className="d-flex flex-column w-50" style={{padding:'0px 10px 40px 20px'}} >
+                <div className="div-9 w-100 round-top-border-left round-top-border-right us-litigation-headers-left d-flex align-items-center" style={{
+                          backgroundColor: "#FEF4EB"
+                        }}>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-29 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto'
+                        }}
+                      >
+                        <div className="text-wrapper-9">F2F</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-31 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto'
+                        }}
+                      >
+                        <div className="text-wrapper-9">Total number of ANDAs submitted</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-33 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto'
+                        }}
+                      >
+                        <div className="text-wrapper-9">
+                        Date of ANDA submission
+                        </div>
+                      </div>
+                    </div>
+                    <div className="div-8" style={{ width: "25%" }}>
+                      <div
+                        className="frame-wrapper w-100"
+                        style={{
+                          border:'none',
+                          height:'auto'
+                        }}
+                      >
+                        <div className="frame-2 w-100">
+                          <div className="text-wrapper-22">
+                            7.5 years/30 months expiration date
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {litigationDetailData?.map((row, index) => (
+                    <div
+                      className={`div-9 w-100 us-litigation d-flex align-items-center ${
+                        index == litigationDetailData.length - 1
+                          ? "round-border-left round-border-right"
+                          : ""
+                      }`}
+                    >
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div
+                          className={`element-30 w-100 ${
+                            index == litigationDetailData.length - 1
+                              ? "round-border-left"
+                              : ""
+                          }`} style={{border:'none', height:'auto'}}
+                        >
+                          <div className="text-wrapper-10">
+                            {row.CaseNumber}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
+                          <div className="text-wrapper-10">{row.Date}</div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
+                          <div className="text-wrapper-10">
+                            {row.CourtWithJurisdiction}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div
+                          className={`element-41 w-100 ${
+                            index == litigationDetailData.length - 1
+                              ? "round-border-right"
+                              : ""
+                          }`} style={{border:'none', height:'auto'}}
+                        >
+                          <div className="text-wrapper-10">
+                            {row.ProceedingsInCourt}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="d-flex flex-column w-50" style={{padding:'0px 20px 40px 10px'}} >
+                <div className="div-9 w-100 round-top-border-left round-top-border-right us-litigation-headers-right d-flex align-items-center" style={{
+                          backgroundColor: "#FFF4D8", height:'77px'
+                        }}>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-29 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto',
+                          background:'none'
+                        }}
+                      >
+                        <div className="text-wrapper-9">Suitability Petition</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-31 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto',
+                          background:'none'
+                        }}
+                      >
+                        <div className="text-wrapper-9">Docket ID</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "25%" }}>
+                      <div
+                        className="element-33 w-100"
+                        style={{
+                          border:'none',
+                          height:'auto',
+                          background:'none'
+                        }}
+                      >
+                        <div className="text-wrapper-9">
+                        Filed By
+                        </div>
+                      </div>
+                    </div>
+                    <div className="div-8" style={{ width: "25%" }}>
+                      <div
+                        className="frame-wrapper w-100"
+                        style={{
+                          border:'none',
+                          height:'auto',
+                          background:'none'
+                        }}
+                      >
+                        <div className="frame-2 w-100">
+                          <div className="text-wrapper-22">
+                            Status
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {litigationDetailData?.map((row, index) => (
+                    <div
+                      className={`div-9 w-100 us-litigation-right d-flex align-items-center ${
+                        index == litigationDetailData.length - 1
+                          ? "round-border-left round-border-right"
+                          : ""
+                      }`}
+                    >
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div
+                          className={`element-30 w-100 ${
+                            index == litigationDetailData.length - 1
+                              ? "round-border-left"
+                              : ""
+                          }`} style={{border:'none', height:'auto'}}
+                        >
+                          <div className="text-wrapper-10">
+                            {row.CaseNumber}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
+                          <div className="text-wrapper-10">{row.Date}</div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
+                          <div className="text-wrapper-10">
+                            {row.CourtWithJurisdiction}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "25%" }}>
+                        <div
+                          className={`element-41 w-100 ${
+                            index == litigationDetailData.length - 1
+                              ? "round-border-right"
+                              : ""
+                          }`} style={{border:'none', height:'auto'}}
+                        >
+                          <div className="text-wrapper-10">
+                            {row.ProceedingsInCourt}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                </div>
                 <div className="litigation-brief">
                   <div className="subheading">
-                    <div className="text-wrapper-21">Litigation Brief</div>
+                    <div className="text-wrapper-21">Litigation Summary</div>
                   </div>
-                  <div className="div-9 round-top-left-border round-top-right-border">
-                    <div className="div-6" style={{ width: "14.7%" }}>
-                      <div className="element-29 w-100">
+                  <div className="div-9">
+                    <div className="div-6" style={{ width: "14.7%", }}>
+                      <div className="element-29 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Case Number</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "13.7%" }}>
-                      <div className="element-31 w-100">
+                      <div className="element-31 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Date</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "14.7%" }}>
-                      <div className="element-33 w-100">
+                      <div className="element-33 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">
                           Court with Jurisdiction
                         </div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "17.6%" }}>
-                      <div className="element-35 w-100">
+                      <div className="element-35 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">
                           Plaintiffs and Defendants
                         </div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "10.8%" }}>
-                      <div className="element-37 w-100">
+                      <div className="element-37 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Decision</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "10.8%" }}>
-                      <div className="element-39 w-100">
+                      <div className="element-39 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Status</div>
                       </div>
                     </div>
                     <div className="div-8" style={{ width: "17.7%" }}>
-                      <div className="frame-wrapper w-100">
+                      <div className="frame-wrapper w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
                         <div className="frame-2 w-100">
                           <div className="text-wrapper-22">Patent Numbers</div>
                           <img
@@ -1136,14 +1323,14 @@ export const AdminPanel = () => {
                     </div>
                   </div>
                   {litigationBriefData?.map((row, index) => (
-                    <div className="div-9" style={{background:'none'}}>
+                    <div className="div-9 ">
                       <div className="div-6" style={{ width: "14.7%" }}>
                         <div
                           className={`element-30 w-100 ${
                             index == litigationBriefData.length - 1
                               ? "round-border-left"
                               : ""
-                          }`}
+                          }`} style={{borderColor: '#d5ddf4'}}
                         >
                           <div className="text-wrapper-10">
                             {row.CaseNumber}
@@ -1151,31 +1338,31 @@ export const AdminPanel = () => {
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "13.7%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
                           <div className="text-wrapper-10">{row.Date}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "14.7%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
                           <div className="text-wrapper-10">
                             {row.CourtWithJurisdiction}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "17.6%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
                           <div className="text-wrapper-10">
                             {row.PlaintiffsAndDefendants}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "10.8%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
                           <div className="text-wrapper-10">{row.Decision}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "10.8%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
                           <div className="text-wrapper-10">{row.Status}</div>
                         </div>
                       </div>
@@ -1185,9 +1372,10 @@ export const AdminPanel = () => {
                             index == litigationBriefData.length - 1
                               ? "round-border-right"
                               : ""
-                          }`}
+                          }`} style={{borderColor: '#d5ddf4'}}
                         >
-                          <div className="text-wrapper-10" style={{color:'#9e028f', fontWeight:'bolder'}}>
+                          <div className="text-wrapper-10" style={{color: '#9D00C6',
+    fontWeight: 'bolder'}}>
                             {row.PatentNumbers}
                           </div>
                         </div>
@@ -1195,70 +1383,106 @@ export const AdminPanel = () => {
                     </div>
                   ))}
                 </div>
-                <div className="litigation-detail w-100">
+                <div className="detail-description w-100">
                   <div className="subheading">
-                    <div className="text-wrapper-21">Litigation Detail</div>
+                    <div className="text-wrapper-21">Detailed description of Hearings of Litigation </div>
                   </div>
-                  <div className="div-9 w-100 litigation-detail-header">
+                  <div className="div-9 headerFields w-100">
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-29 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">Case Number</div>
+                        <div className="text-wrapper-9">Nature of suit</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-31 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">Date</div>
+                        <div className="text-wrapper-9">Case Number</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-33 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">
-                          Court with Jurisdiction
+                        <div className="text-wrapper-9">
+                        Date
                         </div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-35 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">
-                          Plaintiffs and Defendants
+                        <div className="text-wrapper-9">
+                        Court with Jurisdiction
                         </div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-35 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">Patent Number</div>
+                        <div className="text-wrapper-9">Plaintiffs and Defendants</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-37 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">Summary</div>
+                        <div className="text-wrapper-9">Patent Number</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "12.5%" }}>
                       <div
-                        className="litigation-detail-header-items w-100"
+                        className="element-39 w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
                       >
-                        <div className="litigation-detail-text-wrap">Filing Number</div>
+                        <div className="text-wrapper-9">Filing Number</div>
                       </div>
                     </div>
                     <div className="div-8" style={{ width: "12.5%" }}>
-                        <div className="litigation-detail-header-items w-100">
-                          <div className="litigation-detail-text-wrap">
+                      <div
+                        className="frame-wrapper w-100"
+                        style={{
+                          backgroundColor: "#F5F1FF",
+                          borderColor: "#F5F1FF",
+                        }}
+                      >
+                        <div className="frame-2 w-100">
+                          <div className="text-wrapper-22">
                             Proceedings in Court
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
                   {litigationDetailData?.map((row, index) => (
@@ -1275,7 +1499,7 @@ export const AdminPanel = () => {
                             index == litigationDetailData.length - 1
                               ? "round-border-left"
                               : ""
-                          }`}
+                          }`} style={{borderColor: '#F5F1FF'}}
                         >
                           <div className="text-wrapper-10">
                             {row.CaseNumber}
@@ -1283,38 +1507,38 @@ export const AdminPanel = () => {
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">{row.Date}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">
                             {row.CourtWithJurisdiction}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">
                             {row.PlaintiffsAndDefendants}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">
                             {row.PatentNumber}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">{row.Summary}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "12.5%" }}>
-                        <div className="element-34 w-100">
+                        <div className="element-34 w-100" style={{borderColor: '#F5F1FF'}}>
                           <div className="text-wrapper-10">
                             {row.FilingNumber}
                           </div>
@@ -1326,7 +1550,7 @@ export const AdminPanel = () => {
                             index == litigationDetailData.length - 1
                               ? "round-border-right"
                               : ""
-                          }`}
+                          }`} style={{borderColor: '#F5F1FF'}}
                         >
                           <div className="text-wrapper-10">
                             {row.ProceedingsInCourt}
@@ -1337,62 +1561,94 @@ export const AdminPanel = () => {
                   ))}
                 </div>
               </div>
-              <div className="div-4">
+              <div className="us-launch">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-9">
-                      <div className="text-wrapper">EP Launch</div>
+                      <div className="text-wrapper">US Launch</div>
                     </div>
                   </div>
                 </div>
                 <div className="litigation-detail w-100">
-                  <div className="ep-launch-header w-100 ">
+                  <div className="div-9 w-100">
                     <div className="div-6" style={{ width: "16.7%" }}>
                       <div
-                        className="ep-launch-header-items w-100"
+                        className="element-29 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
                       >
                         <div className="text-wrapper-9">Active Ingredients</div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "13.7%" }}>
-                      <div
-                        className="ep-launch-header-items w-100"
-                      >
-                        <div className="text-wrapper-9">Brand Name</div>
-                      </div>
-                    </div>
-                    <div className="div-6" style={{ width: "17.6%" }}>
-                      <div
-                        className="ep-launch-header-items w-100"
-                      >
-                        <div className="text-wrapper-9">Strength</div>
-                      </div>
-                    </div>
                     <div className="div-6" style={{ width: "14.7%" }}>
                       <div
-                        className="ep-launch-header-items w-100"
+                        className="element-35 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
                       >
                         <div className="text-wrapper-9">Dosage Form</div>
                       </div>
                     </div>
                     <div className="div-6" style={{ width: "10%" }}>
                       <div
-                        className="ep-launch-header-items w-100"
+                        className="element-35 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
                       >
                         <div className="text-wrapper-9">Route</div>
                       </div>
                     </div>
+                    <div className="div-6" style={{ width: "13.7%" }}>
+                      <div
+                        className="element-31 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
+                      >
+                        <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Brand Name</div>
+                      </div>
+                    </div>
                     <div className="div-6" style={{ width: "11.7%" }}>
                       <div
-                        className="ep-launch-header-items w-100"
+                        className="element-37 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
                       >
-                        <div className="text-wrapper-9">Country</div>
+                        <div className="text-wrapper-9">Manufacturer</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "17.6%" }}>
+                      <div
+                        className="element-33 w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
+                      >
+                        <div className="text-wrapper-9">Strength</div>
                       </div>
                     </div>
                     <div className="div-8" style={{ width: "15.6%" }}>
-                        <div className="ep-launch-header-items w-100">
-                          <div className="text-wrapper-22">Marketer</div>
+                      <div
+                        className="frame-wrapper w-100"
+                        style={{
+                          backgroundColor: "#ebf0fe",
+                          borderColor: "#D5DDF4",
+                        }}
+                      >
+                        <div className="frame-2 w-100">
+                          <div className="text-wrapper-22">Marketing Status</div>
                         </div>
+                      </div>
                     </div>
                   </div>
                   {epLaunchData?.map((row, index) => (
@@ -1416,31 +1672,31 @@ export const AdminPanel = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "13.7%" }}>
+                      <div className="div-6" style={{ width: "14.7%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">
                             {row.BrandNames}
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "17.6%" }}>
+                      <div className="div-6" style={{ width: "10%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">{row.Strengths}</div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "14.7%" }}>
+                      <div className="div-6" style={{ width: "13.7%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">
                             {row.DosageForm}
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "10%" }}>
+                      <div className="div-6" style={{ width: "11.7%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">{row.Route}</div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "11.7%" }}>
+                      <div className="div-6" style={{ width: "17.6%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">{row.Country}</div>
                         </div>
@@ -1453,14 +1709,14 @@ export const AdminPanel = () => {
                               : ""
                           }`}
                         >
-                          <div className="text-wrapper-10">{row.Marketers}</div>
+                          <div className="text-wrapper-10" style={{backgroundColor: "#DCFAF8", borderRadius:'20px', padding:'10px', textAlign: 'center'}}>{row.Marketers}</div>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="div-4">
+              <div className="api-manufacturing-status">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-3">
@@ -1478,7 +1734,7 @@ export const AdminPanel = () => {
                         style={{ width: "15%" }}
                       >
                         <div className="element-3">
-                          <div className="text-wrapper-9">Brand name</div>
+                          <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Brand name</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div
@@ -1488,7 +1744,7 @@ export const AdminPanel = () => {
                                 : "element-4"
                             }
                           >
-                            <div className="text-wrapper-10">
+                            <div className="text-wrapper-10" style={{paddingTop: '0px'}}>
                               {row.BrandName}
                             </div>
                           </div>
@@ -1558,7 +1814,7 @@ export const AdminPanel = () => {
 
                         <div className="div-7" style={{ width: "15%" }}>
                           <div className="element-12">
-                            <div className="text-wrapper-9">Status</div>
+                            <div className="text-wrapper-9">Active Ingredient</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-13">
@@ -1570,7 +1826,7 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-6">
                           <div className="element-14">
-                            <div className="text-wrapper-9">SPC</div>
+                            <div className="text-wrapper-9">Manufacturer Country</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-15">
@@ -1580,7 +1836,7 @@ export const AdminPanel = () => {
                         </div>
                         <div className="div-6">
                           <div className="element-14">
-                            <div className="text-wrapper-9">PED</div>
+                            <div className="text-wrapper-9">Active US DMF</div>
                           </div>
                           {patentData.map((row, index) => (
                             <div className="element-15">
@@ -1591,9 +1847,7 @@ export const AdminPanel = () => {
                         <div className="div-6">
                           <div className="element-10">
                             <div className="text-wrapper-9">
-                              Estimated expiry&nbsp;&nbsp;
-                              <br />
-                              (inc. PTE PED)
+                              Active Korean DMF
                             </div>
                           </div>
                           {patentData.map((row, index) => (
@@ -1607,7 +1861,21 @@ export const AdminPanel = () => {
                         <div className="div-6">
                           <div className="element-17">
                             <div className="text-wrapper-9">
-                              Independent claims coverage brief
+                              Active Japanese DMF
+                            </div>
+                          </div>
+                          {patentData.map((row, index) => (
+                            <div className="element-18">
+                              <div className="text-wrapper-10">
+                                {row.IndependentClaimsCoverageBrief}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-17">
+                            <div className="text-wrapper-9">
+                              Active COS
                             </div>
                           </div>
                           {patentData.map((row, index) => (
@@ -1649,7 +1917,7 @@ export const AdminPanel = () => {
                   </div>
                 </div>
               </div>
-              <div className="div-4">
+              <div className="clinical-trials">
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-11">
@@ -1661,7 +1929,7 @@ export const AdminPanel = () => {
                   <div className="table">
                     <div className="patentDetailsStartingColumn">
                       <div className="element-3">
-                        <div className="text-wrapper-9">Active Ingredients</div>
+                        <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Active Ingredients</div>
                       </div>
                       {patentData.map((row, index) => (
                         <div
@@ -1671,14 +1939,14 @@ export const AdminPanel = () => {
                               : "element-4"
                           }
                         >
-                          <div className="text-wrapper-10">{row.BrandName}</div>
+                          <div className="text-wrapper-10" style={{paddingTop: '0px'}}>{row.BrandName}</div>
                         </div>
                       ))}
                     </div>
                     <div className="column-scroll">
                       <div className="div-6">
                         <div className="element-6">
-                          <div className="text-wrapper-9">EudraCT Number</div>
+                          <div className="text-wrapper-9">Title</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className={`element-7 ${index === patentData.length-1 ? 'scroll-margin' : ''}`}>
@@ -1691,7 +1959,7 @@ export const AdminPanel = () => {
                       <div className="div-6">
                         <div className="element-6">
                           <div className="text-wrapper-9">
-                            National Competent Authority
+                            Status
                           </div>
                         </div>
                         {patentData.map((row, index) => (
@@ -1704,7 +1972,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-6">
                         <div className="element-8">
-                          <div className="text-wrapper-9">Trial Status</div>
+                          <div className="text-wrapper-9">Study Results</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-9">
@@ -1716,7 +1984,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-6">
                         <div className="element-8">
-                          <div className="text-wrapper-9">Patent number</div>
+                          <div className="text-wrapper-9">Conditions</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-9">
@@ -1728,7 +1996,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-6">
                         <div className="element-10">
-                          <div className="text-wrapper-9">Current Assignee</div>
+                          <div className="text-wrapper-9">Interventions</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-11">
@@ -1740,7 +2008,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-7">
                         <div className="element-12">
-                          <div className="text-wrapper-9">Status</div>
+                          <div className="text-wrapper-9">Outcome Measures</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-13">
@@ -1750,7 +2018,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-6">
                         <div className="element-14">
-                          <div className="text-wrapper-9">SPC</div>
+                          <div className="text-wrapper-9">Sponsers/Collaborators</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-15">
@@ -1760,7 +2028,7 @@ export const AdminPanel = () => {
                       </div>
                       <div className="div-6">
                         <div className="element-14">
-                          <div className="text-wrapper-9">PED</div>
+                          <div className="text-wrapper-9">Phases</div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-15">
@@ -1771,29 +2039,13 @@ export const AdminPanel = () => {
                       <div className="div-6">
                         <div className="element-10">
                           <div className="text-wrapper-9">
-                            Estimated expiry&nbsp;&nbsp;
-                            <br />
-                            (inc. PTE PED)
+                            Study Type
                           </div>
                         </div>
                         {patentData.map((row, index) => (
                           <div className="element-11">
                             <div className="text-wrapper-11">
                               {row.EstimatedExpiry}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="div-6">
-                        <div className="element-17">
-                          <div className="text-wrapper-9">
-                            Independent claims coverage brief
-                          </div>
-                        </div>
-                        {patentData.map((row, index) => (
-                          <div className="element-18">
-                            <div className="text-wrapper-10">
-                              {row.IndependentClaimsCoverageBrief}
                             </div>
                           </div>
                         ))}
@@ -1852,7 +2104,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className={`div-10 ${tabNo == 4 ? 'tab-click' : ''}`} onClick={() => onTabClick(4)}>
                   <div className="group-15">
-                    <div className="text-wrapper-29">EP Litigation</div>
+                    <div className="text-wrapper-29">US Litigation</div>
                   </div>
                 </div>
                 <div className={`div-10 ${tabNo == 5 ? 'tab-click' : ''}`} onClick={() => onTabClick(5)}>
@@ -1864,7 +2116,7 @@ export const AdminPanel = () => {
                 </div>
                 <div className={`div-10 ${tabNo == 6 ? 'tab-click' : ''}`} onClick={() => onTabClick(6)}>
                   <div className="group-17">
-                    <div className="text-wrapper-29">EP Launch</div>
+                    <div className="text-wrapper-29">US Launch</div>
                   </div>
                 </div>
                 <div className={`div-10 ${tabNo == 7 ? 'tab-click' : ''}`} onClick={() => onTabClick(7)}>
@@ -1885,7 +2137,7 @@ export const AdminPanel = () => {
                       src="../src/assets/vectors/Globe19_x2.svg"
                     />
                     <div className="select-region-2 d-flex align-items-center">
-                      <div className="text-wrapper-31">Europe</div>
+                      <div className="text-wrapper-31">USA</div>
                     </div>
                     <img
                       className="arrow-down"

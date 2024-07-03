@@ -10,8 +10,12 @@ import SetPasswordPage from "../setPasswordPage/setPasswordPage";
 import { useNavigate } from "react-router-dom";
 
 const ResetPasswordPage = () => {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [OtpVisible, setOtpVisible] = useState(false);
   const [otp, setOtp] = useState<string[]>(Array(4).fill(''));
+  const [finalOtp, setFinalOtp] = useState("");
   const [verifyclicked, setVerifyClicked] = useState(false);
   const [receivedOtp, setReceivedOtp] = useState('2345');
   const otpRef = useRef(null);
@@ -21,9 +25,34 @@ const ResetPasswordPage = () => {
     setOtpVisible(true);
   };
 
+  const validateEmail = () => {
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handleEmailChange = (event: any) => {
+    const { value } = event.target;
+    setEmail(value);
+    if (value.trim().length === 0) {
+      setEmailError("Email cannot be empty");
+    } else {
+      validateEmail();
+    }
+  };
+
+  const updateOtp = (otp: any) => {
+    setFinalOtp(otp);
+  }
+
   const handleOTP = (e: any) => {
     e.preventDefault();
     const enteredOtp = otp.join('');
+    setFinalOtp(enteredOtp);
+    console.log("final", finalOtp, finalOtp.length);
+    
     console.log("otp", enteredOtp);
     // if (enteredOtp === receivedOtp) {
       navigate('/setPassword');
@@ -55,13 +84,14 @@ const ResetPasswordPage = () => {
                 </p>
                 <Form.Group className="mb-3 d-flex flex-column justify-content-center" controlId="formBasicOtp">
                   <Form.Label style={{ textAlign: 'center' }}>OTP</Form.Label>
-                  <OtpPage length={4} otp={otp} setOtp={setOtp} onComplete={(otp) => console.log(otp)
+                  <OtpPage length={4} otp={otp} setOtp={setOtp} onComplete={(otp) => updateOtp(otp)
                   } />
                 </Form.Group>
                 <Button
                   variant="primary"
                   type="submit"
-                  className="w-100  btn-login"
+                  className={`w-100  btn-login ${(finalOtp.length !== 4) ? 'btn-login-disabled' : ''}`}
+                  disabled={finalOtp.length !== 4}
                   onClick={handleOTP}
                 >
                  <div className="log-in">Verify OTP</div>
@@ -79,6 +109,9 @@ const ResetPasswordPage = () => {
                     type="email"
                     placeholder="example@domain.com"
                     className="custom-input"
+                    value={email}
+                    onChange={handleEmailChange}
+                    onBlur={validateEmail}
                   />
                 </Form.Group>
 
@@ -94,8 +127,9 @@ const ResetPasswordPage = () => {
                 <Button
                   variant="primary"
                   type="submit"
-                  className="w-100  btn-login"
+                  className={`w-100  btn-login ${(email === "" || emailError !== "") ? 'btn-login-disabled' : ''}`}
                   onClick={handleSendEmail}
+                  disabled={(email === "" || emailError !== "")}
                 >
                  <div className="log-in">Send Email</div>
                 </Button>

@@ -8,11 +8,12 @@ import logo from "../../assets/images/inphamed-login-logo.png"
 
 const LoginPage = () => {
 
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("Please enter a valid email adress");
-  const [passwordError, setPasswordError] = useState("Please enter a valid password");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -29,6 +30,44 @@ const LoginPage = () => {
   const routeHome = () => {
     navigate('/')
   }
+
+  const validateEmail = () => {
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handleEmailChange = (event: any) => {
+    const { value } = event.target;
+    setEmail(value);
+    if (value.trim().length === 0) {
+      setEmailError("Email cannot be empty");
+    } else {
+      validateEmail();
+    }
+  };
+
+  const handlePasswordChange = (event: any) => {
+    const { value } = event.target;
+    setPassword(value);
+    if (value.trim().length === 0) {
+      setPasswordError("Password cannot be empty");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault(); // Prevent form submission
+    // Additional validation can be added here before proceeding with login
+    if (emailError === "" && passwordError === "") {
+      // Proceed with login logic
+      handleLogin();
+    }
+  };
+
   return (
     <div className="inphamed-login-v1">
       <img className="bg-icon" alt="" src={lg} />
@@ -47,7 +86,7 @@ const LoginPage = () => {
             <Form className="mt-4">
               <Form.Group className="mb-4 text-start" controlId="formBasicEmail">
                 <Form.Label>Email Address</Form.Label>
-                <Form.Control type="email" value={email} placeholder="example@domain.com" className={`custom-input ${emailError ? "input-error" : ""}`} />
+                <Form.Control type="email" value={email} onChange={handleEmailChange} onBlur={validateEmail} placeholder="example@domain.com" className={`custom-input ${emailError ? "input-error" : ""}`} />
                 {emailError && (
                   <Form.Text className="text-danger" style={{ fontSize: '13px' }}>{emailError}</Form.Text>
                 )}
@@ -59,6 +98,7 @@ const LoginPage = () => {
                 <div className="password-wrapper">
                   <Form.Control
                     type={passwordVisible ? "text" : "password"}
+                    onChange={handlePasswordChange}
                     placeholder="Password"
                     className={`custom-input ${emailError ? "input-error" : ""}`}
                   />
@@ -87,7 +127,7 @@ const LoginPage = () => {
                 <a href="#" className="text-decoration-none reset-password-link" onClick={handleResetPassword}>Reset Password?</a>
               </div>
 
-              <Button type="submit" className="w-100 btn-login" onClick={handleLogin}>
+              <Button type="submit" className={`w-100 btn-login ${(email !== "" && emailError === "" && password !== "" && passwordError === "") ? '' : 'loginbtn-disabled'}`} onClick={handleLogin} disabled={(email == "" || emailError !== "") || (password == "" || passwordError !== "")}>
                 <div className="log-in">Log In</div>
               </Button>
             </Form>

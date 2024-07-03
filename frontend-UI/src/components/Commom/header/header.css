@@ -10,22 +10,36 @@
 .expert-icon {
   width: 40px;
   position: relative;
-  border: 1px solid rgb(130, 130, 130);
+  border: 1px solid #bcc5d5;
   border-radius: 7px;
   height: 40px;
   overflow: hidden;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
-.help-icon {
-  width: 40px;
-  padding: 10px;
-  position: relative;
-  border: 1px solid rgb(130, 130, 130);
-  border-radius: 7px;
-  height: 40px;
-  overflow: hidden;
-  flex-shrink: 0;
+.expert-icon .support-svgrepo-com {
+  height: 22px;
+  left: 10px;
+  position: absolute;
+  top: 9px;
+  width: 21px;
+}
+
+.expert-icon .email-notification {
+  height: 22px;
+  left: 9px;
+  position: absolute !important;
+  top: 8px;
+  width: 21px;
+}
+
+.expert-icon .help-icon {
+  height: 18px;
+  left: 14px;
+  position: absolute !important;
+  top: 11px;
+  width: 12px;
 }
 
 .top-right-links {
@@ -48,6 +62,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid #DCE3EE;
 }
 
 /* ---------------------------------------------------------------------------------------- */
@@ -68,11 +83,11 @@
   align-items: flex-start;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0px 0px 30px #0000001a;
   display: flex;
   overflow: hidden;
   position: relative;
   width: 750px;
+  border: 1px solid #BCC5C5;
 }
 
 .header-search-with-advanced .header-select-region {

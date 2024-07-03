@@ -168,6 +168,7 @@
     overflow: hidden;
     padding: 14px 50px;
     position: relative;
+    color: white;
 }
 
 .search-with-advanced .text-wrapper-2 {
@@ -462,6 +463,7 @@
     padding: 15px 41px;
     position: relative;
     width: 100px;
+    cursor: pointer;
 }
 
 .search_container .delete-field {
@@ -473,6 +475,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    cursor: pointer;
 }
 
 .add-field .plus-icon {
@@ -541,7 +544,7 @@
     align-items: center;
     display: inline-flex;
     gap: 30px;
-    padding: 0px 50px 40px;
+    padding: 10px 50px 40px;
 }
 
 .search_container .cancel {
