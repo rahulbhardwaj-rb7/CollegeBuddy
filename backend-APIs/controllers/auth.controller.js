@@ -185,7 +185,8 @@ const generateOtp = async (req, res) => {
 
     res.json({
       status: 200,
-      message: "OTP Sent"
+      message: "OTP Sent",
+      data:genOtpID._id
     });
 
   } catch (error) {
