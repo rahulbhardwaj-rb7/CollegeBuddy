@@ -3,13 +3,11 @@ import mongoose from "mongoose";
 const userRegionMappingSchema = new mongoose.Schema({
     userID: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     region: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     isActive: {
         type: Boolean,

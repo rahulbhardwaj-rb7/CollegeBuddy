@@ -17,12 +17,16 @@ const userRegionMapping = async (req, res) => {
 const getUserRegion = async (req, res) => {
     try {
         const userID = req.params.userID;
+        console.log("userID",userID);
         if (!userID) {
           return res.status(400).json({ error: 'User ID is required' });
         }
     
-        const regions = await UserRegionMappingModel.find({ user_id: userID }, 'region -_id');
-        res.status(200).json(regions.map(record => record.region));
+        const regions = await UserRegionMappingModel.find({ userID: userID }, 'region -_id');
+        res.status(200).json({
+          status: 200,
+          data:regions.map(record => record.region)
+        });
       } catch (error) {
         res.status(500).json({ error: 'An error occurred', details: error.message });
       }

@@ -26,7 +26,7 @@ InphamedRoute.post("/auth/forgot/password/otpSubmit", submitOtp);
 InphamedRoute.put("/auth/forgot/password/updatePassword", changePassword);
 
 InphamedRoute.post("/master/addUserRegion", userRegionMapping);
-InphamedRoute.get("/master/getUserRegion", getUserRegion);
+InphamedRoute.get("/master/getUserRegion/:userID", getUserRegion);
 
 
 InphamedRoute.put('/excelDataForUS', upload.single('file'), async (req, res) => {
