@@ -3,56 +3,6 @@ import UserOtpModel from "../models/user_otp.js";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 
-// const register = async (req, res, next) => {
-//   try {
-//     const role = await RoleModel.findOne({ name: "user" });
-//     if (!role) throw CreateError(500, "Role 'user' not found");
-
-//     const salt = await bcrypt.genSalt(10);
-//     const hashPassword = await bcrypt.hash(req.body.password, salt);
-
-//     const newUser = new UserModel({
-//       // firstName: req.body.firstName,
-//       // lastName: req.body.lastName,
-//       username: req.body.username,
-//       email: req.body.email,
-//       password: hashPassword,
-//       // contactNo: req.body.contactNo,
-//       roles: [role._id],
-//     });
-
-//     await newUser.save();
-//     const roles = [role.name];
-//     const tokenPayload = {
-//       id: newUser._id,
-//       email: newUser.email,
-//       roles: roles,
-//     };
-//     const token = Jwt.sign(tokenPayload, process.env.JWT_SECRET);
-//     console.log("Generated access_token:", token);
-
-//     // res.cookie("access_token", token, {
-//     //   httpOnly: true,
-//     //   secure: true,
-//     //   sameSite: "none",
-//     // });
-
-//     res.json({
-//       status: 200,
-//       message: "Registeration successful",
-//       data: {
-//         id: newUser._id,
-//         email: newUser.email,
-//         roles: roles,
-//         token: token,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// };
-
 const register = async (req, res, next) => {
   try {
     // const role = await RoleModel.findOne({ name: "user" });
