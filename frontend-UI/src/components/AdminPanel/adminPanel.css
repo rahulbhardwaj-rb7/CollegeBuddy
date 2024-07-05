@@ -21,6 +21,7 @@
     position: relative;
     width: 100%;
     display: flex;
+    height: 84vh;
   }
   
   .europe-drug-profile .dashboard {
@@ -48,8 +49,7 @@
     gap: 20px;
     left: 1px;
     padding: 7px 20px;
-    position: absolute;
-    top: 155px;
+    position: relative;
     width: 100%;
   }
   
@@ -3276,11 +3276,13 @@
   
   .europe-drug-profile .search-term-sub-menu {
     background-color: #f5f7fa;
-    height: 155px;
+    height: auto;
     left: 0;
-    position: absolute;
+    position: relative;
     top: 0;
     width: 100%;
+    display: flex;
+    flex-direction: column;
   }
   
   .europe-drug-profile .sub-menu-links {
@@ -3289,10 +3291,10 @@
     gap: 33px;
     left: 0;
     padding: 20px;
-    position: absolute;
-    top: 78px;
+    position: relative;
     width: 100%;
     justify-content: space-between;
+    height: auto;
   }
   
   .europe-drug-profile .product-key {
@@ -3405,8 +3407,7 @@
     gap: 95px;
     left: 0;
     padding: 20px 0px;
-    position: absolute;
-    top: 0;
+    position: relative;
     width: 100%;
     justify-content: space-between;
   }
@@ -3466,6 +3467,7 @@
     height: 18px;
     position: relative;
     width: 44px;
+    margin-right: 10px;
   }
   
   .europe-drug-profile .text-wrapper-31 {
@@ -3661,6 +3663,7 @@
     gap: 20px;
     position: relative;
     width: 100%;
+    height: 100%;
   }
   
   .europe-drug-profile .heading-5 {
@@ -3706,6 +3709,7 @@
     width: 100%;
     padding: 0px 10px;
     position: relative;
+    height: 70%;
   }
   
   .europe-drug-profile .drugs-list {
@@ -3715,7 +3719,7 @@
     flex-direction: column;
     gap: 8px;
     position: relative;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     overflow-y: auto;
   }
@@ -4314,4 +4318,13 @@
 /* margin from horizontal scrollbar */
 .scroll-margin {
   margin-bottom: 10px;
+}
+
+.product-info-table-cell {
+  vertical-align: top;
+}
+
+.strength-route-margin {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
 }

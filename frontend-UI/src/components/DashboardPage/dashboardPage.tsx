@@ -3,11 +3,26 @@ import './dashboardPage.css';
 import SearchBar from '../../layouts/SearchBar/searchBar';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import toggleSearchBar from "../../layouts/DashboardLayout/dashboardLayout"
+import axios from 'axios';
 
 type OutletContextType = {
     toggleSearchBar: (show: boolean) => void;
     showSearchBar: boolean;
   };
+
+const getRegion = async () => {
+    try {
+        const userID = sessionStorage.getItem("user_id");
+        const response = await axios.get(`http://localhost:3000/inphamed/api/v1/master/getUserRegion/${userID}`)
+        if(response.status === 200){
+            console.log(response);
+        }
+    } catch (error : any) {
+        console.log(error);
+        
+    }
+}
+
 
 const DashboardPage = () => {
 

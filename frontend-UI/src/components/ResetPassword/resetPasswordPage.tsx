@@ -8,6 +8,11 @@ import logo from "../../assets/images/inphamed-login-logo.png";
 import OtpPage from "../OtpPage/otpPage";
 import SetPasswordPage from "../setPasswordPage/setPasswordPage";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
+
 
 const ResetPasswordPage = () => {
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -17,12 +22,37 @@ const ResetPasswordPage = () => {
   const [otp, setOtp] = useState<string[]>(Array(4).fill(''));
   const [finalOtp, setFinalOtp] = useState("");
   const [verifyclicked, setVerifyClicked] = useState(false);
-  const [receivedOtp, setReceivedOtp] = useState('2345');
+  const [receivedOtp, setReceivedOtp] = useState('');
   const otpRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSendEmail = () => {
-    setOtpVisible(true);
+  const handleSendEmail = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/forgot/password", {
+        email: email
+      })
+      if(response.status === 200){
+        const otp_id = response.data.data;
+        sessionStorage.setItem("otp_id", otp_id);
+        setOtpVisible(true);
+      }
+    } catch (error: any) {
+      const msg = error.response.data.message;
+      toast.error(msg, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+    } finally {
+
+    }
   };
 
   const validateEmail = () => {
@@ -35,6 +65,7 @@ const ResetPasswordPage = () => {
 
   const handleEmailChange = (event: any) => {
     const { value } = event.target;
+    console.log(value);
     setEmail(value);
     if (value.trim().length === 0) {
       setEmailError("Email cannot be empty");
@@ -47,16 +78,35 @@ const ResetPasswordPage = () => {
     setFinalOtp(otp);
   }
 
-  const handleOTP = (e: any) => {
+  const handleOTP = async (e: any) => {
     e.preventDefault();
-    const enteredOtp = otp.join('');
-    setFinalOtp(enteredOtp);
-    console.log("final", finalOtp, finalOtp.length);
-    
-    console.log("otp", enteredOtp);
-    // if (enteredOtp === receivedOtp) {
-      navigate('/setPassword');
-    // }
+    try{
+      const enteredOtp = otp.join('');
+      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/forgot/password/otpSubmit", {
+        otp_id: sessionStorage.getItem("otp_id"),
+        otp: enteredOtp
+      })
+      if(response.status === 200) {
+        console.log("response", response);
+        sessionStorage.setItem("user_id", response.data.data);
+        navigate('/setPassword')
+      }
+    } catch (error: any) {
+      const msg = error.response.data.message;
+      toast.error(msg, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+    } finally {
+
+    }
   }
 
   const routeHome = () => {
@@ -65,6 +115,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="inphamed-login-v1">
+      <ToastContainer></ToastContainer>
       <img className="bg-icon" alt="" src={lg} />
       <div className="login-section">
         <Card className="p-4 login-card email-address-details">
@@ -110,7 +161,7 @@ const ResetPasswordPage = () => {
                     placeholder="example@domain.com"
                     className="custom-input"
                     value={email}
-                    onChange={handleEmailChange}
+                    onChangeCapture={handleEmailChange}
                     onBlur={validateEmail}
                   />
                 </Form.Group>

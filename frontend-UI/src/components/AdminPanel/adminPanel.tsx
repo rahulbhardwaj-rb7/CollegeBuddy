@@ -1,19 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./adminPanel.css";
 import { useNavigate } from "react-router-dom";
 
 export const AdminPanel = () => {
+
+  const [showSCP, setShowSCP] = useState(false);
 
   const navigate = useNavigate();
   const [tabNo, setTabNo] = useState(1);
 
   const onTabClick = (tab: any) => {
     setTabNo(tab);
+    if(tab === 1) {
+      setActiveTable('product-key-insights');
+    } else if (tab === 2) {
+      setActiveTable('regulatory-information');
+    } else if (tab === 3) {
+      setActiveTable('intellectual-property-patents');
+    } else if (tab === 4) {
+      setActiveTable('ep-litigation');
+    } else if (tab === 5) {
+      setActiveTable('api-manufacturing');
+    } else if (tab === 6) {
+      setActiveTable('ep-launch');
+    } else if (tab === 7) {
+      setActiveTable('clinical-trials');
+    }
   }
 
   const onLogOutClick = () => {
+    sessionStorage.clear();
     navigate('/');
   }
+
+  const [activeTable, setActiveTable] = useState<string | null>(null);
+  const apiManufacturingRef = useRef<HTMLDivElement>(null);
+  const clinicalTrialsRef = useRef<HTMLDivElement>(null);
+  const productKeyInsights = useRef<HTMLDivElement>(null);
+  const epLitigation = useRef<HTMLDivElement>(null);
+  const epLaunch = useRef<HTMLDivElement>(null);
+  const regulatoryInformation = useRef<HTMLDivElement>(null);
+  const intellectualPropertyPatents = useRef<HTMLDivElement>(null);
+
+  // Scroll function to scroll a given ref into view
+  const scrollIntoView = (ref: React.RefObject<HTMLDivElement> | null) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Effect hook to scroll active table into view when it changes
+  useEffect(() => {
+    if (activeTable === 'api-manufacturing') {
+      scrollIntoView(apiManufacturingRef);
+    } else if (activeTable === 'clinical-trials') {
+      scrollIntoView(clinicalTrialsRef);
+    }
+    else if (activeTable === 'product-key-insights') {
+      scrollIntoView(productKeyInsights);
+    }
+    else if (activeTable === 'regulatory-information') {
+      scrollIntoView(regulatoryInformation);
+    }
+    else if (activeTable === 'ep-litigation') {
+      scrollIntoView(epLitigation);
+    }
+    else if (activeTable === 'ep-launch') {
+      scrollIntoView(epLaunch);
+    }
+    else if (activeTable === 'intellectual-property-patents') {
+      scrollIntoView(intellectualPropertyPatents);
+    }
+  }, [activeTable]);
 
   const drugsName: any[] = [
     "Palbociclib",
@@ -439,30 +497,16 @@ export const AdminPanel = () => {
       company: "PFIZER INC",
       therapeuticClass: "Antineoplastics",
       dosageForm: "Tablet",
-      strength: "75mg",
-      route: "Oral",
-    },
-    {
-      brandName: "IBRANCE",
-      activeIngredient: "PALBOCICLIB",
-      company: "PFIZER INC",
-      therapeuticClass: "Antineoplastics",
-      dosageForm: "Tablet",
-      strength: "100mg",
-      route: "Oral",
-    },
-    {
-      brandName: "IBRANCE",
-      activeIngredient: "PALBOCICLIB",
-      company: "PFIZER INC",
-      therapeuticClass: "Antineoplastics",
-      dosageForm: "Tablet",
-      strength: "125mg",
-      route: "Oral",
-    },
+      strengths: [
+        { strength: "75mg", route: "Oral" },
+        { strength: "100mg", route: "Oral" },
+        { strength: "125mg", route: "Oral" }
+      ]
+    }
   ];
+  
 
-  const [sideBarMaximised, setSideBarMaximised] = useState(true);
+  const [sideBarMaximised, setSideBarMaximised] = useState(false);
 
   const sideBarButtonClicked = () => {
     setSideBarMaximised(!sideBarMaximised);
@@ -535,9 +579,95 @@ export const AdminPanel = () => {
               </div>
             </div>
           )}
+          <div style={{width:'-webkit-fill-available', display: 'flex', flexDirection: 'column'}}>
+          <div className="search-term-sub-menu">
+              <div className="search-term">
+                <div className="search-term-region">
+                  <div className="heading-4">
+                    <div className="text-wrapper-30">Paracetamol</div>
+                  </div>
+                  <div className="select-region">
+                    <img
+                      className="region-icon"
+                      alt="Region icon"
+                      src="../src/assets/vectors/Globe19_x2.svg"
+                    />
+                    <div className="select-region-2 d-flex align-items-center">
+                      <div className="text-wrapper-31">{sessionStorage.getItem("selected_region")}</div>
+                    </div>
+                    <img
+                      className="arrow-down"
+                      alt="Arrow down"
+                      src="../src/assets/vectors/Xmlid22228_x2.svg"
+                    />
+                  </div>
+                </div>
+                <div className="save-download">
+                  <div className="save">
+                    <img
+                      className="wishlist-svgrepo-com"
+                      alt="Wishlist svgrepo com"
+                      src="../src/assets/vectors/Vector50_x2.svg"
+                    />
+                    <div className="text-wrapper-32">Save the Search</div>
+                  </div>
+                  <div className="download">
+                    <img
+                      className="download-svgrepo-com"
+                      alt="Download svgrepo com"
+                      src="../src/assets/vectors/Group2_x2.svg"
+                    />
+                    <div className="text-wrapper-32">Export</div>
+                  </div>
+                </div>
+              </div>
+              <div className="sub-menu-links">
+                <div className={`product-key ${tabNo == 1 ? 'tab-click' : ''}`} >
+                  <div className="group-12" onClick={() => onTabClick(1)}>
+                    <div className="text-wrapper-28">Product Key Insights</div>
+                  </div>
+                </div>
+                <div className={`div-10 ${tabNo == 2 ? 'tab-click' : ''}`} onClick={() => onTabClick(2)}>
+                  <div className="group-13">
+                    <div className="text-wrapper-29">
+                      Regulatory Information
+                    </div>
+                  </div>
+                </div>
+                <div className={`div-10 ${tabNo == 3 ? 'tab-click' : ''}`} onClick={() => onTabClick(3)}>
+                  <div className="group-14">
+                    <div className="text-wrapper-29">
+                      Intellectual Property Patents
+                    </div>
+                  </div>
+                </div>
+                {/* <div className={`div-10 ${tabNo == 4 ? 'tab-click' : ''}`} onClick={() => onTabClick(4)}>
+                  <div className="group-15">
+                    <div className="text-wrapper-29">EP Litigation</div>
+                  </div>
+                </div> */}
+                <div className={`div-10 ${tabNo == 5 ? 'tab-click' : ''}`} onClick={() => onTabClick(5)}>
+                  <div className="group-16">
+                    <div className="text-wrapper-29">
+                      API Manufacturing Status
+                    </div>
+                  </div>
+                </div>
+                <div className={`div-10 ${tabNo == 6 ? 'tab-click' : ''}`} onClick={() => onTabClick(6)}>
+                  <div className="group-17">
+                    <div className="text-wrapper-29">EP Launch</div>
+                  </div>
+                </div>
+                <div className={`div-10 ${tabNo == 7 ? 'tab-click' : ''}`} onClick={() => onTabClick(7)}>
+                  <div className="group-18">
+                    <div className="text-wrapper-29">Clinical Trials</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           <div className="dashboard">
             <div className="dashboard-2">
-              <div className="div-2">
+              <div className="div-2" ref={productKeyInsights}>
                 <div className="heading">
                   <div className="headline">
                     <div className="group">
@@ -573,64 +703,68 @@ export const AdminPanel = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {drugs.map((drug: any, index: any) => (
-                        <tr>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.brandName}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.activeIngredient}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.company}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.therapeuticClass}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.dosageForm}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.strength}
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="table-cell">
-                              <div className="IBRANCE text-wrapper-3">
-                                {drug.route}
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
+      {drugs.map((drug, index) => (
+        <tr key={index}>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              <div className="IBRANCE text-wrapper-3">
+                {drug.brandName}
+              </div>
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              <div className="IBRANCE text-wrapper-3">
+                {drug.activeIngredient}
+              </div>
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              <div className="IBRANCE text-wrapper-3">
+                {drug.company}
+              </div>
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              <div className="IBRANCE text-wrapper-3">
+                {drug.therapeuticClass}
+              </div>
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              <div className="IBRANCE text-wrapper-3">
+                {drug.dosageForm}
+              </div>
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              {drug.strengths.map((strengthObj: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
+                  {strengthObj.strength}
+                </div>
+              ))}
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              {drug.strengths.map((strengthObj: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
+                  {strengthObj.route}
+                </div>
+              ))}
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
                   </table>
                 </div>
               </div>
-              <div className="div-2">
+              <div className="div-2" ref={regulatoryInformation}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-2">
@@ -748,7 +882,7 @@ export const AdminPanel = () => {
                   </div>
                 </div>
               </div>
-              <div className="div-4">
+              <div className="div-4" ref={intellectualPropertyPatents}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-3">
@@ -1004,7 +1138,8 @@ export const AdminPanel = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="div-3">
+                  {showSCP && (
+                    <div className="div-3">
                     <div className="div-9 w-100 property-patents-second-table">
                       <div className="brand-name">
                         <div className="group-4">
@@ -1073,9 +1208,10 @@ export const AdminPanel = () => {
                       </div>
                     ))}
                   </div>
+                  )}
                 </div>
               </div>
-              <div className="div-2">
+              {/* <div className="div-2" ref={epLitigation}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-8">
@@ -1336,8 +1472,8 @@ export const AdminPanel = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-              <div className="div-4">
+              </div> */}
+              <div className="div-4" ref={epLaunch}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-9">
@@ -1460,7 +1596,7 @@ export const AdminPanel = () => {
                   ))}
                 </div>
               </div>
-              <div className="div-4">
+              <div className="div-4" ref={apiManufacturingRef}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-3">
@@ -1649,7 +1785,7 @@ export const AdminPanel = () => {
                   </div>
                 </div>
               </div>
-              <div className="div-4">
+              <div className="div-4" ref={clinicalTrialsRef}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-11">
@@ -1829,91 +1965,7 @@ export const AdminPanel = () => {
                 </div>
               </div>
             </div>
-            <div className="search-term-sub-menu">
-              <div className="sub-menu-links">
-                <div className={`product-key ${tabNo == 1 ? 'tab-click' : ''}`} >
-                  <div className="group-12" onClick={() => onTabClick(1)}>
-                    <div className="text-wrapper-28">Product Key Insights</div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 2 ? 'tab-click' : ''}`} onClick={() => onTabClick(2)}>
-                  <div className="group-13">
-                    <div className="text-wrapper-29">
-                      Regulatory Information
-                    </div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 3 ? 'tab-click' : ''}`} onClick={() => onTabClick(3)}>
-                  <div className="group-14">
-                    <div className="text-wrapper-29">
-                      Intellectual Property Patents
-                    </div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 4 ? 'tab-click' : ''}`} onClick={() => onTabClick(4)}>
-                  <div className="group-15">
-                    <div className="text-wrapper-29">EP Litigation</div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 5 ? 'tab-click' : ''}`} onClick={() => onTabClick(5)}>
-                  <div className="group-16">
-                    <div className="text-wrapper-29">
-                      API Manufacturing Status
-                    </div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 6 ? 'tab-click' : ''}`} onClick={() => onTabClick(6)}>
-                  <div className="group-17">
-                    <div className="text-wrapper-29">EP Launch</div>
-                  </div>
-                </div>
-                <div className={`div-10 ${tabNo == 7 ? 'tab-click' : ''}`} onClick={() => onTabClick(7)}>
-                  <div className="group-18">
-                    <div className="text-wrapper-29">Clinical Trials</div>
-                  </div>
-                </div>
-              </div>
-              <div className="search-term">
-                <div className="search-term-region">
-                  <div className="heading-4">
-                    <div className="text-wrapper-30">Paracetamol</div>
-                  </div>
-                  <div className="select-region">
-                    <img
-                      className="region-icon"
-                      alt="Region icon"
-                      src="../src/assets/vectors/Globe19_x2.svg"
-                    />
-                    <div className="select-region-2 d-flex align-items-center">
-                      <div className="text-wrapper-31">Europe</div>
-                    </div>
-                    <img
-                      className="arrow-down"
-                      alt="Arrow down"
-                      src="../src/assets/vectors/Xmlid22228_x2.svg"
-                    />
-                  </div>
-                </div>
-                <div className="save-download">
-                  <div className="save">
-                    <img
-                      className="wishlist-svgrepo-com"
-                      alt="Wishlist svgrepo com"
-                      src="../src/assets/vectors/Vector50_x2.svg"
-                    />
-                    <div className="text-wrapper-32">Save the Search</div>
-                  </div>
-                  <div className="download">
-                    <img
-                      className="download-svgrepo-com"
-                      alt="Download svgrepo com"
-                      src="../src/assets/vectors/Group2_x2.svg"
-                    />
-                    <div className="text-wrapper-32">Export</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          </div>
           </div>
         </div>
       </div>
