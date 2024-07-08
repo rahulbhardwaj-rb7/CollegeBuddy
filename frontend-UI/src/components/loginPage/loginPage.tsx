@@ -5,6 +5,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./loginPage.css";
 import lg from "../../assets/images/loginBackground.png"
 import logo from "../../assets/images/inphamed-login-logo.png"
+import axios from "axios";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = () => {
 
@@ -23,12 +26,74 @@ const LoginPage = () => {
   const handleResetPassword = () => {
     navigate('/reset-password');
   };
-  const handleLogin = () => {
-    navigate('/inphamed');
 
+  const getRegion = async () => {
+    try {
+        const userID = sessionStorage.getItem("user_id");
+        const response = await axios.get(`http://localhost:3000/inphamed/api/v1/master/getUserRegion/${userID}`)
+        if(response.status === 200){
+            const regions = response.data.data;
+            sessionStorage.setItem("regions", regions);
+        }
+        navigate('/inphamed');
+    } catch (error : any) {
+        console.log(error);
+    }
+}
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    console.log("email", email, "pswrd", password);
+    
+    try{
+      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/login", {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+          console.log("res", response);
+          const data = response.data.data;
+          sessionStorage.setItem("user_id", data.id);
+          sessionStorage.setItem("token", data.token);
+          getRegion(); // Add a delay before navigation
+      } else {
+        toast.error('Invalid Credentials!', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          });
+      }
+    } catch (error: any) {
+      const msg = error.response.data.message;
+      toast.error(msg, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+      
+    } finally {
+
+    }
   };
   const routeHome = () => {
     navigate('/')
+  }
+
+  const storeUserInfo = () => {
+    sessionStorage.setItem("email_id", email);
+    sessionStorage.setItem("password", password);
   }
 
   const validateEmail = () => {
@@ -59,17 +124,9 @@ const LoginPage = () => {
     }
   };
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault(); // Prevent form submission
-    // Additional validation can be added here before proceeding with login
-    if (emailError === "" && passwordError === "") {
-      // Proceed with login logic
-      handleLogin();
-    }
-  };
-
   return (
     <div className="inphamed-login-v1">
+      <ToastContainer></ToastContainer>
       <img className="bg-icon" alt="" src={lg} />
       <div className="login-section">
         <Card className="login-card px-4">
@@ -121,7 +178,7 @@ const LoginPage = () => {
               </Form.Group>
 
               <div className="d-flex justify-content-between align-items-center mb-3 remember-reset">
-                <Form.Group controlId="formBasicCheckbox">
+                <Form.Group controlId="formBasicCheckbox" onClick={storeUserInfo}>
                   <Form.Check type="checkbox" label="Remember me" />
                 </Form.Group>
                 <a href="#" className="text-decoration-none reset-password-link" onClick={handleResetPassword}>Reset Password?</a>
