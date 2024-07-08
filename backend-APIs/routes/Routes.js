@@ -12,7 +12,7 @@ import { importExcelDataForUS, importExcelDataForEurope } from "../utils/importE
 import multer from 'multer';
 import { getUserRegion, userRegionMapping } from "../controllers/mapping.controller.js";
 import { getAdvanceSearchDataForUS, getBasicSearchDataForUS } from "../controllers/search.controller.js";
-import { getUsOverview } from "../controllers/usDrugInfo.controller.js";
+import { getUsOverview, getUsRegulatory, getUsip } from "../controllers/usDrugInfo.controller.js";
 
 
 const InphamedRoute = express.Router();
@@ -34,15 +34,17 @@ InphamedRoute.get("/master/getUserRegion/:userID", getUserRegion);
 InphamedRoute.post("/usBasicSearch", getBasicSearchDataForUS);
 InphamedRoute.post("/usAdvanceSearch", getAdvanceSearchDataForUS);
 // ------------------------------------------------------------------------------
-// ---------------------------------US Drug Info------------------------------
-InphamedRoute.get("/getUsOverview",getUsOverview);
-// ---------------------------------------------------------------------------
 
 // ----------------------------------EP basic and advance search-----------------
 InphamedRoute.post("/epBasicSearch", getBasicSearchDataForUS);
 InphamedRoute.post("/epAdvanceSearch", getAdvanceSearchDataForUS);
 // ------------------------------------------------------------------------------
 
+// ---------------------------------US Drug Info------------------------------
+InphamedRoute.get("/getUsOverview",getUsOverview);
+InphamedRoute.get("/getUsRegulatory",getUsRegulatory);
+InphamedRoute.get("/getUsip",getUsip);
+// ---------------------------------------------------------------------------
 
 
 
