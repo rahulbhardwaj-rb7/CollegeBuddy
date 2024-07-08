@@ -4,32 +4,17 @@ import jwt from 'jsonwebtoken';
 export const authenticateUser = async (req, res, next) => {
     try {
         const token = req.cookies["access_token"]
-
         console.log("tok", token);
-
-
         if (!token) {
             return res.status(401).json({ error: 'Unauthorized: No token provided' });
         }
-
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-
         const userId = decoded.id;
-
-
         const user = await UserModel.findById(userId);
-
-
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-
-
         req.user = user;
-
-
         next();
     } catch (error) {
         console.error('Authentication error:', error);

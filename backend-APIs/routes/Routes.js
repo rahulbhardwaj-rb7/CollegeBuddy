@@ -11,6 +11,7 @@ import { validateLogin } from "../utils/validation.js";
 import { importExcelDataForUS, importExcelDataForEurope } from "../utils/importExcel.js";
 import multer from 'multer';
 import { getUserRegion, userRegionMapping } from "../controllers/mapping.controller.js";
+import { getAdvanceSearchDataForUS, getBasicSearchDataForUS } from "../controllers/search.controller.js";
 
 
 const InphamedRoute = express.Router();
@@ -27,6 +28,18 @@ InphamedRoute.put("/auth/forgot/password/updatePassword", changePassword);
 
 InphamedRoute.post("/master/addUserRegion", userRegionMapping);
 InphamedRoute.get("/master/getUserRegion/:userID", getUserRegion);
+
+// ----------------------------------US basic and advance search-----------------
+InphamedRoute.post("/usBasicSearch", getBasicSearchDataForUS);
+InphamedRoute.post("/usAdvanceSearch", getAdvanceSearchDataForUS);
+// ------------------------------------------------------------------------------
+
+// ----------------------------------EP basic and advance search-----------------
+InphamedRoute.post("/epBasicSearch", getBasicSearchDataForUS);
+InphamedRoute.post("/epAdvanceSearch", getAdvanceSearchDataForUS);
+// ------------------------------------------------------------------------------
+
+
 
 
 InphamedRoute.put('/excelDataForUS', upload.single('file'), async (req, res) => {

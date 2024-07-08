@@ -31,4 +31,4 @@ const validateLogin = (req, res, next) => {
     next();
 };
 
-export { registerValidator, validate, loginValidator, validateLogin };
+export { validate, validateLogin };

@@ -2,19 +2,23 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const UserOtpSchema = new Schema(
+const usPetitionSchema = new Schema(
     {
-        userID: {
+        "title": {
             type: String,
-            required: true,
+           
         },
-        otp_value: {
+        "docketID": {
             type: String,
-            required: true,
+           
         },
-        usage_status: {
+        "filedBy": {
             type: String,
-            required: true,
+           
+        },
+        "status": {
+            type: String,
+           
         },
         isValid: {
             type: Boolean,
@@ -26,6 +30,6 @@ const UserOtpSchema = new Schema(
     }
 );
 
-const UserOtpModel = mongoose.model("userotps", UserOtpSchema);
+const UsPetitionModel = mongoose.model("us_petitions", usPetitionSchema);
 
-export default UserOtpModel;
+export default UsPetitionModel;
