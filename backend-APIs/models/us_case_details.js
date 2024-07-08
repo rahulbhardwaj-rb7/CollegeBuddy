@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const usCaseDetailsSchema = new Schema(
     {
+        "ndaNumber": {
+            type: String,
+           
+        },
         "caseNumber": {
             type: String,
            

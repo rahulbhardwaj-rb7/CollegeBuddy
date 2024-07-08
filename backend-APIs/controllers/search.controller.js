@@ -1,5 +1,7 @@
 import EpOverviewModel from "../models/ep_overview.js";
+import EpRegulatoryModel from "../models/ep_regulatory.js";
 import UsOverviewModel from "../models/us_overview.js";
+import UsRegulatoryModel from "../models/us_regulatory.js";
 
 const getBasicSearchDataForUS = async (req, res) => {
   try {
@@ -29,7 +31,18 @@ const getBasicSearchDataForUS = async (req, res) => {
       ]
     };
 
-    const searchResults = await UsOverviewModel.find(searchQuery);
+    const overviewResults = await UsOverviewModel.find(searchQuery);
+    const searchResults = [];
+
+    for (const overview of overviewResults) {
+      const regulatoryResults = await UsRegulatoryModel.find({ ndaNumber: overview.ndaNumber });
+      const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+      const combinedResult = {
+        ...overview._doc,
+        dateOfApproval: dateOfApproval
+      };
+      searchResults.push(combinedResult);
+    }
     res.json({
       status: 200,
       message: "Search successful",
@@ -96,7 +109,18 @@ const getBasicSearchDataForEP = async (req, res) => {
       ]
     };
 
-    const searchResults = await EpOverviewModel.find(searchQuery);
+    const overviewResults = await EpOverviewModel.find(searchQuery);
+    const searchResults = [];
+
+    for (const overview of overviewResults) {
+      const regulatoryResults = await EpRegulatoryModel.find({ agencyProductNumber: overview.agencyProductNumber });
+      const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+      const combinedResult = {
+        ...overview._doc,
+        dateOfApproval: dateOfApproval
+      };
+      searchResults.push(combinedResult);
+    }
     res.json({
       status: 200,
       message: "Search successful",

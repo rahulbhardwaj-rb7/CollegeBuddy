@@ -25,6 +25,7 @@ const createCollectionAndInsertData = async (collectionName, data) => {
 
 const importExcelDataForUS = async (buffer, req, res) => {
     try {
+        let ndaNumber;
         const workbook = xlsx.read(buffer, { type: 'buffer' });
 
         workbook.SheetNames.forEach(async (sheetName) => {
@@ -36,10 +37,11 @@ const importExcelDataForUS = async (buffer, req, res) => {
                     if (row[0] && row[1]) {
                         result[row[0]] = row[1];
                     }
-                    console.log("overview:::::", result);
                     return result;
                 }, {});
+
                 jsonData = [jsonData];
+                ndaNumber = jsonData[0]['NDA Number'];
                 jsonData = jsonData.map((row) => {
                     return {
                         ndaNumber: row['NDA Number'],
@@ -138,12 +140,11 @@ const importExcelDataForUS = async (buffer, req, res) => {
                     if (petitionNumbers) {
                         record['Petition Numbers'] = petitionNumbers;
                     }
-
                     return record;
                 });
                 jsonData = jsonData.map((row) => {
                     return {
-                        ndaNumber: row['NDA Number'],
+                        ndaNumber: ndaNumber,
                         caseNumber: row['Case Number'],
                         filingDate: row['Filing Date of case '],
                         courtJurisdiction: row['Court with Jurisdiction'],
@@ -160,6 +161,7 @@ const importExcelDataForUS = async (buffer, req, res) => {
                 const rows = xlsx.utils.sheet_to_json(worksheet);
                 jsonData = rows.map((row) => {
                     return {
+                        ndaNumber: ndaNumber,
                         caseNumber: row['Case Number'],
                         dateOfProceedings: row['Date of Proceedings'],
                         filingNumber: row['Filing Number '],
@@ -172,6 +174,7 @@ const importExcelDataForUS = async (buffer, req, res) => {
                 const rows = xlsx.utils.sheet_to_json(worksheet);
                 jsonData = rows.map((row) => {
                     return {
+                        ndaNumber: ndaNumber,
                         numberOfANDAs: row['Total number of ANDAs submitted'],
                         dateOfANDAsubmission: row['Date of ANDA submission'],
                         strength: row['Strength'],
@@ -187,6 +190,7 @@ const importExcelDataForUS = async (buffer, req, res) => {
                 const rows = xlsx.utils.sheet_to_json(worksheet);
                 jsonData = rows.map((row) => {
                     return {
+                        ndaNumber: ndaNumber,
                         title: row['Title'],
                         docketID: row['Docket ID'],
                         filedBy: row['Filed by'],

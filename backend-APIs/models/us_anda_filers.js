@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const usAndaFilersSchema = new Schema(
     {
+        "ndaNumber": {
+            type: String,
+           
+        },
         "numberOfANDAs": {
             type: Number,
            

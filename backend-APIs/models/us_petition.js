@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const usPetitionSchema = new Schema(
     {
+        "ndaNumber": {
+            type: String,
+           
+        },
         "title": {
             type: String,
            
