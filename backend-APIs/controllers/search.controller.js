@@ -5,7 +5,8 @@ import UsRegulatoryModel from "../models/us_regulatory.js";
 
 const getBasicSearchDataForUS = async (req, res) => {
   try {
-    const searchRegex = new RegExp(req.body.simpleSearch, 'i');
+    if (req.body.simpleSearch) {
+      const searchRegex = new RegExp(req.body.simpleSearch, 'i');
     console.log("req.body.simpleSearch:", req.body.simpleSearch);
     console.log("searchQuery:", searchRegex);
 
@@ -48,6 +49,13 @@ const getBasicSearchDataForUS = async (req, res) => {
       message: "Search successful",
       result: searchResults,
     });
+    }else{
+      res.status(400).json({
+        status: 400,
+        message: "Search value is required.",
+      });
+    }
+    
   } catch (error) {
     console.error('Error performing global search:', error);
     res.status(500).json({

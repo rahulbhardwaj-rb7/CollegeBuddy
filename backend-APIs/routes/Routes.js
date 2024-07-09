@@ -11,8 +11,9 @@ import { validateLogin } from "../utils/validation.js";
 import { importExcelDataForUS, importExcelDataForEurope } from "../utils/importExcel.js";
 import multer from 'multer';
 import { getUserRegion, userRegionMapping } from "../controllers/mapping.controller.js";
-import { getAdvanceSearchDataForUS, getBasicSearchDataForUS } from "../controllers/search.controller.js";
-import { getUsOverview, getUsRegulatory, getUsip } from "../controllers/usDrugInfo.controller.js";
+import { getAdvanceSearchDataForEP, getAdvanceSearchDataForUS, getBasicSearchDataForEP, getBasicSearchDataForUS } from "../controllers/search.controller.js";
+import { getUsAndaFilers, getUsCaseDetails, getUsLitigationSummary, getUsOverview, getUsPitition, getUsProbability, getUsRegulatory, getUsip } from "../controllers/usDrugInfo.controller.js";
+import { getEpIp, getEpOverview, getEpProbability, getEpRegulatory, getEpSpc } from "../controllers/epDrugInfo.controller.js";
 
 
 const InphamedRoute = express.Router();
@@ -36,14 +37,27 @@ InphamedRoute.post("/usAdvanceSearch", getAdvanceSearchDataForUS);
 // ------------------------------------------------------------------------------
 
 // ----------------------------------EP basic and advance search-----------------
-InphamedRoute.post("/epBasicSearch", getBasicSearchDataForUS);
-InphamedRoute.post("/epAdvanceSearch", getAdvanceSearchDataForUS);
+InphamedRoute.post("/epBasicSearch", getBasicSearchDataForEP);
+InphamedRoute.post("/epAdvanceSearch", getAdvanceSearchDataForEP);
 // ------------------------------------------------------------------------------
 
 // ---------------------------------US Drug Info------------------------------
-InphamedRoute.get("/getUsOverview",getUsOverview);
-InphamedRoute.get("/getUsRegulatory",getUsRegulatory);
-InphamedRoute.get("/getUsip",getUsip);
+InphamedRoute.get("/getUsOverview", getUsOverview);
+InphamedRoute.get("/getUsRegulatory", getUsRegulatory);
+InphamedRoute.get("/getUsip", getUsip);
+InphamedRoute.get("/getUsProbability", getUsProbability);
+InphamedRoute.get("/getUsLitigationSummary", getUsLitigationSummary);
+InphamedRoute.get("/getUsCaseDetails", getUsCaseDetails);
+InphamedRoute.get("/getUsAndaFilers", getUsAndaFilers);
+InphamedRoute.get("/getUsPitition", getUsPitition);
+// ---------------------------------------------------------------------------
+
+// ---------------------------------EP Drug Info------------------------------
+InphamedRoute.get("/getEpOverview", getEpOverview);
+InphamedRoute.get("/getEpRegulatory", getEpRegulatory);
+InphamedRoute.get("/getEpIp", getEpIp);
+InphamedRoute.get("/getEpProbability", getEpProbability);
+InphamedRoute.get("/getEpSpc", getEpSpc);
 // ---------------------------------------------------------------------------
 
 
