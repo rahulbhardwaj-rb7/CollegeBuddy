@@ -324,7 +324,7 @@ circle {
     text-transform: uppercase;
 }
 .custom_table-head {
-    width: 1400px;
+    width: 100%;
     border-radius: 15px 15px 0px 0px;
     background-color: #f5f7fa;
     border: 1px solid #dce3ee;
@@ -436,7 +436,7 @@ circle {
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     padding: 20px 50px;
@@ -449,8 +449,11 @@ circle {
     align-items: flex-start;
     justify-content: flex-start;
     padding: 0px 20px;
+    width: 100%;
 }
 .search-result {
+    margin: 0px;
+    margin-bottom: 40px;
     position: relative;
     top: -150px; 
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);

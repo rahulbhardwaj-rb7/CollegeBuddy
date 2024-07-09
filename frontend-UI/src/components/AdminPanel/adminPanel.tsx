@@ -28,6 +28,10 @@ export const AdminPanel = () => {
     }
   }
 
+  const onHomeClick = () => {
+    navigate('/inphamed');
+  }
+
   const onLogOutClick = () => {
     sessionStorage.clear();
     navigate('/');
@@ -517,6 +521,14 @@ export const AdminPanel = () => {
       <div className="div_1">
         <div className="overlap">
         <div className="dashboard-links">
+            <div className="home" onClick={onHomeClick}>
+              <img
+                className="img-2"
+                alt="Home"
+                src="../src/assets/vectors/Vector48_x2.svg"
+              />
+              <div className="text-wrapper-36">Home</div>
+            </div>
             <div className="drugs-selected" onClick={sideBarButtonClicked}>
               <img
                 className="img-2"
@@ -524,14 +536,6 @@ export const AdminPanel = () => {
                 src="../src/assets/vectors/Vector14_x2.svg"
               />
               <div className="text-wrapper-35">Drugs</div>
-            </div>
-            <div className="home">
-              <img
-                className="img-2"
-                alt="Home"
-                src="../src/assets/vectors/Vector48_x2.svg"
-              />
-              <div className="text-wrapper-36">Home</div>
             </div>
             <div className="history">
               <img
@@ -579,7 +583,7 @@ export const AdminPanel = () => {
               </div>
             </div>
           )}
-          <div style={{width:'-webkit-fill-available', display: 'flex', flexDirection: 'column'}}>
+          <div className={`main-container ${sideBarMaximised ? 'main-container-with-sidebar' : ''}`}>
           <div className="search-term-sub-menu">
               <div className="search-term">
                 <div className="search-term-region">
@@ -595,11 +599,6 @@ export const AdminPanel = () => {
                     <div className="select-region-2 d-flex align-items-center">
                       <div className="text-wrapper-31">{sessionStorage.getItem("selected_region")}</div>
                     </div>
-                    <img
-                      className="arrow-down"
-                      alt="Arrow down"
-                      src="../src/assets/vectors/Xmlid22228_x2.svg"
-                    />
                   </div>
                 </div>
                 <div className="save-download">

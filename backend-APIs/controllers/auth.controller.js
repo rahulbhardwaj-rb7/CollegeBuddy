@@ -59,7 +59,7 @@ const login = async (req, res, next) => {
 
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const roles = user.roles.map((role) => role.name);
@@ -188,7 +188,7 @@ const submitOtp = async (req, res) => {
         data: verifyUser.userID
       });
     } else {
-      return res.status(500).json({ message: "Failed to submit OTP." }); // Indicate OTP verification failure
+      return res.status(500).json({ message: "Invalid OTP." }); // Indicate OTP verification failure
     }
 
   } catch (error) {

@@ -5,7 +5,7 @@ import support from "../../../assets/images/notification.svg"
 import help from "../../../assets/images/help.svg"
 import { CiSearch } from "react-icons/ci"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // Define the props interface
 interface MainHeaderProps {
@@ -16,6 +16,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({displaySearch}) => {
 
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [advanceSearch, setAdvanceSearch] = useState(false);
+  const navigate = useNavigate();
 
   const [region, setRegion] = useState<string>('');
 
@@ -28,7 +29,9 @@ const MainHeader: React.FC<MainHeaderProps> = ({displaySearch}) => {
   const regionsArray = regions?.split(',');
 
   const toggleSearch = () => {
+    sessionStorage.setItem("advanceSearch", "true");
     setAdvanceSearch(!advanceSearch);
+    navigate('/inphamed')
   };
   return (
     <div className="header">

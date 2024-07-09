@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./usaAdminPanel.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const USAAdminPanel = () => {
 
@@ -26,6 +27,10 @@ export const USAAdminPanel = () => {
     }
   }
 
+  const onHomeClick = () => {
+    navigate('/inphamed');
+  }
+
   const onLogOutClick = () => {
     sessionStorage.clear();
     navigate('/');
@@ -39,6 +44,10 @@ export const USAAdminPanel = () => {
   const usLaunch = useRef<HTMLDivElement>(null);
   const regulatoryInformation = useRef<HTMLDivElement>(null);
   const intellectualPropertyPatents = useRef<HTMLDivElement>(null);
+  const [productInfo, setProductInfo] = useState([]);
+  const [regulatoryInfo, setRegulatoryInfo] = useState([]);
+  const [ipInfo, setIpInfo] = useState([]);
+
 
   // Scroll function to scroll a given ref into view
   const scrollIntoView = (ref: React.RefObject<HTMLDivElement> | null) => {
@@ -46,6 +55,25 @@ export const USAAdminPanel = () => {
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+    // Effect hook to make multiple API calls on initial render
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const ndaNumber = sessionStorage.getItem("ndaNumber");
+          const usOverview = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsOverview?ndaNumber=${ndaNumber}`);
+          const usRegulatory = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsRegulatory?ndaNumber=${ndaNumber}`)
+          const usIp = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsRegulatory?ndaNumber=${ndaNumber}`)
+
+          console.log(usOverview, usRegulatory, usIp);
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   // Effect hook to scroll active table into view when it changes
   useEffect(() => {
@@ -523,6 +551,14 @@ export const USAAdminPanel = () => {
       <div className="div_1">
         <div className="overlap">
         <div className="dashboard-links">
+            <div className="home" onClick={onHomeClick}>
+              <img
+                className="img-2"
+                alt="Home"
+                src="../src/assets/vectors/Vector48_x2.svg"
+              />
+              <div className="text-wrapper-36">Home</div>
+            </div>
             <div className="drugs-selected" onClick={sideBarButtonClicked}>
               <img
                 className="img-2"
@@ -530,14 +566,6 @@ export const USAAdminPanel = () => {
                 src="../src/assets/vectors/Vector14_x2.svg"
               />
               <div className="text-wrapper-35">Drugs</div>
-            </div>
-            <div className="home">
-              <img
-                className="img-2"
-                alt="Home"
-                src="../src/assets/vectors/Vector48_x2.svg"
-              />
-              <div className="text-wrapper-36">Home</div>
             </div>
             <div className="history">
               <img
@@ -585,7 +613,7 @@ export const USAAdminPanel = () => {
               </div>
             </div>
           )}
-          <div style={{width:'-webkit-fill-available', display: 'flex', flexDirection: 'column'}}>
+          <div className={`main-container ${sideBarMaximised ? 'main-container-with-sidebar' : ''}`}>
           <div className="search-term-sub-menu">
               <div className="search-term">
                 <div className="search-term-region">
@@ -601,11 +629,6 @@ export const USAAdminPanel = () => {
                     <div className="select-region-2 d-flex align-items-center">
                       <div className="text-wrapper-31">USA</div>
                     </div>
-                    <img
-                      className="arrow-down"
-                      alt="Arrow down"
-                      src="../src/assets/vectors/Xmlid22228_x2.svg"
-                    />
                   </div>
                 </div>
                 <div className="save-download">

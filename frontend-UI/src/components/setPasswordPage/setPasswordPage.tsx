@@ -16,6 +16,7 @@ const SetPasswordPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -37,8 +38,32 @@ const SetPasswordPage = () => {
     navigate("/");
   };
 
-  const handleSubmit = async (e: any) => {
+  const validatePassword = (e : any) => {
     e.preventDefault();
+    const password = newPassword;
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    ) {
+      setPasswordError("");
+      handleSubmit();
+    } else {
+      setPasswordError(
+        "Password must contain at least 8 characters, including uppercase, lowercase, numeric, and special characters."
+      );
+    }
+  };
+
+  const handleSubmit = async () => {
     try {
       if (newPassword === confirmPassword) {
         const userId = sessionStorage.getItem("user_id");
@@ -123,7 +148,7 @@ const SetPasswordPage = () => {
                       <div>
                         <h6>Password must contains:</h6>
                         <ul>
-                          <li>at least 1 uppercase letter</li>
+                          <li>At least 1 uppercase letter</li>
                           <li>At least 1 lowercase letter</li>
                           <li>At least 1 special character</li>
                           <li>At least 1 numeric digit</li>
@@ -146,6 +171,7 @@ const SetPasswordPage = () => {
                   value={newPassword}
                   onChange={handleNewPassword}
                 />
+                {(passwordError !== "") && <Form.Text className="text-danger" style={{ fontSize: '13px' }}>{passwordError}</Form.Text>}
               </Form.Group>
 
               {/* <Form.Group className="mb-3 position-relative" controlId="formBasicPassword"> */}
@@ -185,7 +211,7 @@ const SetPasswordPage = () => {
 
               <Button
                 type="submit"
-                onClick={handleSubmit}
+                onClick={validatePassword}
                 className={`w-100 mt-4 btn-login ${
                   newPassword !== "" &&
                   confirmPassword !== "" &&
