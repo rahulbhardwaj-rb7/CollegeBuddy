@@ -11,16 +11,33 @@ import UsRegulatoryModel from "../models/us_regulatory.js";
 const getUsOverview = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const overviewResults = await UsOverviewModel.find({ ndaNumber: ndaNumber });
     const searchResults = overviewResults.map(result => {
-      const strengthArray = result.strength.split(/,|&/).map(s => s.trim());
-      const routeArray = Array(strengthArray.length).fill(result.route);
-      const dosageFormArray = Array(strengthArray.length).fill(result.dosageForm);
+      const strengthGroups = result.strength.split('|').map(s => s.trim().split(/,|&/).map(st => st.trim()));
+      const routeGroups = result.route.split('|').map(r => r.trim());
+      const dosageFormGroups = result.dosageForm.split('|').map(df => df.trim());
+      let dosageDetail = [];
+      for (let i = 0; i < dosageFormGroups.length; i++) {
+        const dosageForm = dosageFormGroups[i];
+        const route = routeGroups[i];
+        const strengths = strengthGroups[i];
+        strengths.forEach(strength => {
+          dosageDetail.push({
+            dosageForm: dosageForm,
+            route: route,
+            strength: strength
+          });
+        });
+      }
       return {
         ...result._doc,
-        dosageForm: dosageFormArray,
-        strength: strengthArray,
-        route: routeArray
+        dosageDetail
       };
     });
     res.json({
@@ -28,6 +45,8 @@ const getUsOverview = async (req, res) => {
       message: "Search successful",
       result: searchResults,
     });
+
+
   } catch (error) {
     console.error('Error performing global search:', error);
     res.status(500).json({
@@ -40,6 +59,12 @@ const getUsOverview = async (req, res) => {
 const getUsRegulatory = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsRegulatoryModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -58,6 +83,12 @@ const getUsRegulatory = async (req, res) => {
 const getUsip = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsIPModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -76,6 +107,12 @@ const getUsip = async (req, res) => {
 const getUsProbability = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsProbabilityModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -94,6 +131,12 @@ const getUsProbability = async (req, res) => {
 const getUsLitigationSummary = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await usLitigationSummaryModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -112,6 +155,12 @@ const getUsLitigationSummary = async (req, res) => {
 const getUsCaseDetails = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsCaseDetailsModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -130,6 +179,12 @@ const getUsCaseDetails = async (req, res) => {
 const getUsAndaFilers = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsAndaFilersModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,
@@ -148,6 +203,12 @@ const getUsAndaFilers = async (req, res) => {
 const getUsPitition = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
+    if (!ndaNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "NDA number is required.",
+      });
+    }
     const searchResults = await UsPetitionModel.find({ ndaNumber: ndaNumber });
     res.json({
       status: 200,

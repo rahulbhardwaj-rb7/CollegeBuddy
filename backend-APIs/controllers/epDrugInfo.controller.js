@@ -8,12 +8,44 @@ import EpSpcModel from "../models/ep_spc.js";
 const getEpOverview = async (req, res) => {
   try {
     const { agencyProductNumber } = req.query;
-    const searchResults = await EpOverviewModel.find({ agencyProductNumber: agencyProductNumber });
+    if (!agencyProductNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "Agency product number is required.",
+      });
+    }
+    const overviewResults = await EpOverviewModel.find({ agencyProductNumber: agencyProductNumber });
+
+    const searchResults = overviewResults.map(result => {
+      const strengthGroups = result.strength.split('|').map(s => s.trim().split(/,|&/).map(st => st.trim()));
+      const routeGroups = result.route.split('|').map(r => r.trim());
+      const dosageFormGroups = result.dosageForm.split('|').map(df => df.trim());
+      let dosageDetail = [];
+      for (let i = 0; i < dosageFormGroups.length; i++) {
+        const dosageForm = dosageFormGroups[i];
+        const route = routeGroups[i];
+        const strengths = strengthGroups[i];
+        strengths.forEach(strength => {
+          dosageDetail.push({
+            dosageForm: dosageForm,
+            route: route,
+            strength: strength
+          });
+        });
+      }
+      return {
+        ...result._doc,
+        dosageDetail
+      };
+    });
+
     res.json({
       status: 200,
       message: "Search successful",
       result: searchResults,
     });
+
+
   } catch (error) {
     console.error('Error performing global search:', error);
     res.status(500).json({
@@ -26,6 +58,12 @@ const getEpOverview = async (req, res) => {
 const getEpRegulatory = async (req, res) => {
   try {
     const { agencyProductNumber } = req.query;
+    if (!agencyProductNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "Agency product number is required.",
+      });
+    }
     const searchResults = await EpRegulatoryModel.find({ agencyProductNumber: agencyProductNumber });
     res.json({
       status: 200,
@@ -44,6 +82,12 @@ const getEpRegulatory = async (req, res) => {
 const getEpIp = async (req, res) => {
   try {
     const { agencyProductNumber } = req.query;
+    if (!agencyProductNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "Agency product number is required.",
+      });
+    }
     const searchResults = await EpIpModel.find({ agencyProductNumber: agencyProductNumber });
     res.json({
       status: 200,
@@ -62,6 +106,12 @@ const getEpIp = async (req, res) => {
 const getEpProbability = async (req, res) => {
   try {
     const { agencyProductNumber } = req.query;
+    if (!agencyProductNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "Agency product number is required.",
+      });
+    }
     const searchResults = await EpProbabilityModel.find({ agencyProductNumber: agencyProductNumber });
     res.json({
       status: 200,
@@ -80,6 +130,12 @@ const getEpProbability = async (req, res) => {
 const getEpSpc = async (req, res) => {
   try {
     const { agencyProductNumber } = req.query;
+    if (!agencyProductNumber) {
+      return res.status(400).json({
+        status: 400,
+        message: "Agency product number is required.",
+      });
+    }
     const searchResults = await EpSpcModel.find({ agencyProductNumber: agencyProductNumber });
     res.json({
       status: 200,

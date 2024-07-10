@@ -8,7 +8,7 @@ import {
   submitOtp,
 } from "../controllers/auth.controller.js";
 import { validateLogin } from "../utils/validation.js";
-import { importExcelDataForUS, importExcelDataForEurope } from "../utils/importExcel.js";
+import { importExcelDataForUS, importExcelDataForEurope, bulkUploadDataForUS } from "../utils/importExcel.js";
 import multer from 'multer';
 import { getUserRegion, userRegionMapping } from "../controllers/mapping.controller.js";
 import { getAdvanceSearchDataForEP, getAdvanceSearchDataForUS, getBasicSearchDataForEP, getBasicSearchDataForUS } from "../controllers/search.controller.js";
@@ -62,7 +62,19 @@ InphamedRoute.get("/getEpProbability", getEpProbability);
 InphamedRoute.get("/getEpSpc", getEpSpc);
 // ---------------------------------------------------------------------------
 
-
+// ----------------------------------------BulkUploader----------------------------
+InphamedRoute.put('/bulkUploaderForUS', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
+    }
+    res.status(202).json({ message: 'File upload in progress:' + new Date() });
+    await bulkUploadDataForUS(req.file.buffer);
+  } catch (error) {
+    console.error('Error importing Excel data:', error);
+    res.status(500).send('Failed to import Excel data');
+  }
+});
 
 InphamedRoute.put('/excelDataForUS', upload.single('file'), async (req, res) => {
   try {

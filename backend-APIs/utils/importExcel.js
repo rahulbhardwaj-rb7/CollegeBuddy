@@ -16,13 +16,6 @@ import EpSpcModel from '../models/ep_spc.js';
 import { json } from 'express';
 import UsRegulatoryModel from '../models/us_regulatory.js';
 
-const createCollectionAndInsertData = async (collectionName, data) => {
-    const schema = new mongoose.Schema({}, { strict: false });
-    const Model = mongoose.model(collectionName, schema, collectionName);
-    await Model.insertMany(data);
-    console.log(`Data imported successfully into collection: ${collectionName}`);
-};
-
 const importExcelDataForUS = async (buffer, req, res) => {
     try {
         let ndaNumber;
@@ -326,6 +319,21 @@ const importExcelDataForEurope = async (buffer, req, res) => {
         console.error('Error importing data:', error);
     }
 };
+const bulkUploadDataForUS = async (buffer) => {
+    try {
+        console.log("work started", new Date());
+        setTimeout(async () => {
+            try {
+                if (buffer) {
+                    console.log('Work done');
+                }
+            } catch (error) {
+                console.error('Error processing file:', error);
+            }
+        }, 5000);
+    } catch (error) {
+        console.error('Error importing data:', error);
+    }
+};
 
-
-export { importExcelDataForUS, importExcelDataForEurope };
+export { importExcelDataForUS, importExcelDataForEurope, bulkUploadDataForUS };
