@@ -67,13 +67,13 @@ const getBasicSearchDataForUS = async (req, res) => {
     }
 
     if (searchResults.length > 0) {
-      res.json({
+      res.status(200).json({
         status: 200,
         message: "Search successful",
         result: searchResults,
       });
     } else {
-      res.json({
+      res.status(401).json({
         status: 401,
         message: "No value found"
       });
@@ -93,10 +93,10 @@ const getAdvanceSearchDataForUS = async (req, res) => {
     const { brandName, activeIngredient, ndaNumber, therapeuticClass, patentNumber, caseNumber } = req.body;
     const searchQuery = {
       $or: [
-        { ndaNumber: ndaNumber },
-        { brandName: brandName },
-        { activeIngredient: activeIngredient },
-        { therapeuticClass: therapeuticClass }
+        { ndaNumber: new RegExp(ndaNumber, 'i') },
+        { brandName: new RegExp(brandName, 'i') },
+        { activeIngredient: new RegExp(activeIngredient, 'i') },
+        { therapeuticClass: new RegExp(therapeuticClass, 'i') }
       ]
     };
     const uniqueNdaNumbers = new Set();
@@ -119,13 +119,13 @@ const getAdvanceSearchDataForUS = async (req, res) => {
       }
     }
     if (patentNumber) {
-      const ipRequest = await UsIPModel.find({ patentNumber: patentNumber });
+      const ipRequest = await UsIPModel.find({ patentNumber: new RegExp(patentNumber, 'i') });
       if (ipRequest.length > 0) {
         getUniqueNdaNumbers(ipRequest);
       }
     }
     if (caseNumber) {
-      const litigationRequest = await usLitigationSummaryModel.find({ caseNumber: caseNumber });
+      const litigationRequest = await usLitigationSummaryModel.find({ caseNumber: new RegExp(caseNumber, 'i') });
       if (litigationRequest.length > 0) {
         getUniqueNdaNumbers(litigationRequest);
       }
@@ -145,13 +145,13 @@ const getAdvanceSearchDataForUS = async (req, res) => {
       }
     }
     if (searchResults.length > 0) {
-      res.json({
+      res.status(200).json({
         status: 200,
         message: "Search successful",
         result: searchResults,
       });
     } else {
-      res.json({
+      res.status(401).json({
         status: 401,
         message: "No value found"
       });
@@ -246,10 +246,10 @@ const getAdvanceSearchDataForEP = async (req, res) => {
     const { brandName, activeIngredient, agencyProductNumber, therapeuticClass, patentNumber } = req.body;
     const searchQuery = {
       $or: [
-        { agencyProductNumber: agencyProductNumber },
-        { brandName: brandName },
-        { activeIngredient: activeIngredient },
-        { therapeuticClass: therapeuticClass }
+        { agencyProductNumber: new RegExp(agencyProductNumber, 'i') },
+        { brandName: new RegExp(brandName, 'i') },
+        { activeIngredient: new RegExp(activeIngredient, 'i') },
+        { therapeuticClass: new RegExp(therapeuticClass, 'i') }
       ]
     };
     const uniqueAgencyProductNumber = new Set();
@@ -272,7 +272,7 @@ const getAdvanceSearchDataForEP = async (req, res) => {
       }
     }
     if (patentNumber) {
-      const ipRequest = await EpIpModel.find({ patentNumber: patentNumber });
+      const ipRequest = await EpIpModel.find({ patentNumber: new RegExp(patentNumber, 'i') });
       if (ipRequest.length > 0) {
         getUniqueAgencyProductNumber(ipRequest);
       }
