@@ -11,7 +11,18 @@ import UsRegulatoryModel from "../models/us_regulatory.js";
 const getUsOverview = async (req, res) => {
   try {
     const { ndaNumber } = req.query;
-    const searchResults = await UsOverviewModel.find({ ndaNumber: ndaNumber });
+    const overviewResults = await UsOverviewModel.find({ ndaNumber: ndaNumber });
+    const searchResults = overviewResults.map(result => {
+      const strengthArray = result.strength.split(/,|&/).map(s => s.trim());
+      const routeArray = Array(strengthArray.length).fill(result.route);
+      const dosageFormArray = Array(strengthArray.length).fill(result.dosageForm);
+      return {
+        ...result._doc,
+        dosageForm: dosageFormArray,
+        strength: strengthArray,
+        route: routeArray
+      };
+    });
     res.json({
       status: 200,
       message: "Search successful",
