@@ -1,61 +1,84 @@
+import EpIpModel from "../models/ep_ip.js";
 import EpOverviewModel from "../models/ep_overview.js";
 import EpRegulatoryModel from "../models/ep_regulatory.js";
+import UsIPModel from "../models/us_ip.js";
+import usLitigationSummaryModel from "../models/us_litigation_summary.js";
 import UsOverviewModel from "../models/us_overview.js";
 import UsRegulatoryModel from "../models/us_regulatory.js";
 
 const getBasicSearchDataForUS = async (req, res) => {
   try {
-    if (req.body.simpleSearch) {
-      const searchRegex = new RegExp(req.body.simpleSearch, 'i');
+    if (!req.body.simpleSearch) {
+      return res.status(400).json({
+        status: 400,
+        message: "Simple search query is required.",
+      });
+    }
+
+    const searchRegex = new RegExp(req.body.simpleSearch, 'i');
     console.log("req.body.simpleSearch:", req.body.simpleSearch);
     console.log("searchQuery:", searchRegex);
 
-    const searchQuery = {
+    const searchQuery1 = {
       $or: [
         { "ndaNumber": searchRegex },
         { "brandName": searchRegex },
         { "activeIngredient": searchRegex },
-        { "dosageForm": searchRegex },
-        { "route": searchRegex },
-        { "strength": searchRegex },
         { "company": searchRegex },
         { "therapeuticClass": searchRegex },
-        { "therapyArea": searchRegex },
-        { "generisized": searchRegex },
-        { "numberOfGenericsForFilers": searchRegex },
-        { "numberOfGenericsForLaunch": searchRegex },
-        { "submission": searchRegex },
-        { "reviewPriority": searchRegex },
-        { "sales": searchRegex },
-        { "bcsClass": searchRegex },
-        { "specificTechnology": searchRegex }
       ]
     };
 
-    const overviewResults = await UsOverviewModel.find(searchQuery);
+    const uniqueNdaNumbers = new Set();
     const searchResults = [];
 
-    for (const overview of overviewResults) {
-      const regulatoryResults = await UsRegulatoryModel.find({ ndaNumber: overview.ndaNumber });
-      const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
-      const combinedResult = {
-        ...overview._doc,
-        dateOfApproval: dateOfApproval
-      };
-      searchResults.push(combinedResult);
+    const processResults = async (records) => {
+      for (const record of records) {
+        if (!uniqueNdaNumbers.has(record.ndaNumber)) {
+          uniqueNdaNumbers.add(record.ndaNumber);
+
+          const recordResults = await UsOverviewModel.find({ ndaNumber: record.ndaNumber });
+          for (const rec of recordResults) {
+            const regulatoryResults = await UsRegulatoryModel.find({ ndaNumber: rec.ndaNumber });
+            const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+            const combinedResult = {
+              ...rec._doc,
+              dateOfApproval: dateOfApproval
+            };
+            searchResults.push(combinedResult);
+          }
+        }
+      }
+    };
+
+    const overviewResults = await UsOverviewModel.find(searchQuery1);
+    if (overviewResults.length > 0) {
+      await processResults(overviewResults);
+    } else {
+      const ipResults = await UsIPModel.find({ patentNumber: req.body.simpleSearch });
+      if (ipResults.length > 0) {
+        await processResults(ipResults);
+      } else {
+        const litigationResults = await usLitigationSummaryModel.find({ caseNumber: req.body.simpleSearch });
+        if (litigationResults.length > 0) {
+          await processResults(litigationResults);
+        }
+      }
     }
-    res.json({
-      status: 200,
-      message: "Search successful",
-      result: searchResults,
-    });
-    }else{
-      res.status(400).json({
-        status: 400,
-        message: "Search value is required.",
+
+    if (searchResults.length > 0) {
+      res.json({
+        status: 200,
+        message: "Search successful",
+        result: searchResults,
+      });
+    } else {
+      res.json({
+        status: 401,
+        message: "No value found"
       });
     }
-    
+
   } catch (error) {
     console.error('Error performing global search:', error);
     res.status(500).json({
@@ -67,22 +90,72 @@ const getBasicSearchDataForUS = async (req, res) => {
 };
 const getAdvanceSearchDataForUS = async (req, res) => {
   try {
-    const searchFields = req.body;
-    const searchQuery = {};
-
-    // Build the search query dynamically based on req.body
-    Object.keys(searchFields).forEach(key => {
-      searchQuery[key] = new RegExp(searchFields[key], 'i');
-    });
-
+    const { brandName, activeIngredient, ndaNumber, therapeuticClass, patentNumber, caseNumber } = req.body;
+    const searchQuery = {
+      $or: [
+        { ndaNumber: ndaNumber },
+        { brandName: brandName },
+        { activeIngredient: activeIngredient },
+        { therapeuticClass: therapeuticClass }
+      ]
+    };
+    const uniqueNdaNumbers = new Set();
+    const ndaNumbers = [];
+    const searchResults = [];
     console.log("searchQuery:", searchQuery);
 
-    const results = await UsOverviewModel.find(searchQuery);
-    res.json({
-      status: 200,
-      message: "Search successful",
-      data: results,
-    });
+    const getUniqueNdaNumbers = async (records) => {
+      for (let record of records) {
+        if (!uniqueNdaNumbers.has(record.ndaNumber)) {
+          uniqueNdaNumbers.add(record.ndaNumber);
+          ndaNumbers.push(record.ndaNumber)
+        }
+      }
+    };
+    if (brandName || activeIngredient || ndaNumber || therapeuticClass) {
+      const overviewRequest = await UsOverviewModel.find(searchQuery);
+      if (overviewRequest.length > 0) {
+        getUniqueNdaNumbers(overviewRequest);
+      }
+    }
+    if (patentNumber) {
+      const ipRequest = await UsIPModel.find({ patentNumber: patentNumber });
+      if (ipRequest.length > 0) {
+        getUniqueNdaNumbers(ipRequest);
+      }
+    }
+    if (caseNumber) {
+      const litigationRequest = await usLitigationSummaryModel.find({ caseNumber: caseNumber });
+      if (litigationRequest.length > 0) {
+        getUniqueNdaNumbers(litigationRequest);
+      }
+    }
+    if (ndaNumbers.length > 0) {
+      for (const record of ndaNumbers) {
+        const recordResults = await UsOverviewModel.find({ ndaNumber: record });
+        for (const rec of recordResults) {
+          const regulatoryResults = await UsRegulatoryModel.find({ ndaNumber: rec.ndaNumber });
+          const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+          const combinedResult = {
+            ...rec._doc,
+            dateOfApproval: dateOfApproval
+          };
+          searchResults.push(combinedResult);
+        }
+      }
+    }
+    if (searchResults.length > 0) {
+      res.json({
+        status: 200,
+        message: "Search successful",
+        result: searchResults,
+      });
+    } else {
+      res.json({
+        status: 401,
+        message: "No value found"
+      });
+    }
   } catch (error) {
     console.error('Error performing specific search:', error);
     res.status(500).json({
@@ -95,45 +168,70 @@ const getAdvanceSearchDataForUS = async (req, res) => {
 
 const getBasicSearchDataForEP = async (req, res) => {
   try {
+    if (!req.body.simpleSearch) {
+      return res.status(400).json({
+        status: 400,
+        message: "Simple search query is required.",
+      });
+    }
+
     const searchRegex = new RegExp(req.body.simpleSearch, 'i');
-    const searchQuery = {
+    console.log("req.body.simpleSearch:", req.body.simpleSearch);
+    console.log("searchQuery:", searchRegex);
+
+    const searchQuery1 = {
       $or: [
         { "agencyProductNumber": searchRegex },
         { "brandName": searchRegex },
         { "activeIngredient": searchRegex },
-        { "dosageForm": searchRegex },
-        { "route": searchRegex },
-        { "strength": searchRegex },
         { "company": searchRegex },
         { "therapeuticClass": searchRegex },
-        { "therapyArea": searchRegex },
-        { "generisized": searchRegex },
-        { "numberOfGenerics": searchRegex },
-        { "submission": searchRegex },
-        { "reviewPriority": searchRegex },
-        { "sales": searchRegex },
-        { "bcsClass": searchRegex },
-        { "specificTechnology": searchRegex }
       ]
     };
 
-    const overviewResults = await EpOverviewModel.find(searchQuery);
+    const uniqueAgencyProductNumbers = new Set();
     const searchResults = [];
 
-    for (const overview of overviewResults) {
-      const regulatoryResults = await EpRegulatoryModel.find({ agencyProductNumber: overview.agencyProductNumber });
-      const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
-      const combinedResult = {
-        ...overview._doc,
-        dateOfApproval: dateOfApproval
-      };
-      searchResults.push(combinedResult);
+    const processResults = async (records) => {
+      for (const record of records) {
+        if (!uniqueAgencyProductNumbers.has(record.agencyProductNumber)) {
+          uniqueAgencyProductNumbers.add(record.agencyProductNumber);
+
+          const recordResults = await EpOverviewModel.find({ agencyProductNumber: record.agencyProductNumber });
+          for (const rec of recordResults) {
+            const regulatoryResults = await EpRegulatoryModel.find({ agencyProductNumber: rec.agencyProductNumber });
+            const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+            const combinedResult = {
+              ...rec._doc,
+              dateOfApproval: dateOfApproval
+            };
+            searchResults.push(combinedResult);
+          }
+        }
+      }
+    };
+
+    const overviewResults = await EpOverviewModel.find(searchQuery1);
+    if (overviewResults.length > 0) {
+      await processResults(overviewResults);
+    } else {
+      const ipResults = await EpIpModel.find({ patentNumber: req.body.simpleSearch });
+      if (ipResults.length > 0) {
+        await processResults(ipResults);
+      }
     }
-    res.json({
-      status: 200,
-      message: "Search successful",
-      result: searchResults,
-    });
+    if (searchResults.length > 0) {
+      res.json({
+        status: 200,
+        message: "Search successful",
+        result: searchResults,
+      });
+    } else {
+      res.json({
+        status: 401,
+        message: "No value found"
+      });
+    }
   } catch (error) {
     console.error('Error performing global search:', error);
     res.status(500).json({
@@ -145,19 +243,66 @@ const getBasicSearchDataForEP = async (req, res) => {
 };
 const getAdvanceSearchDataForEP = async (req, res) => {
   try {
-    const searchFields = req.body;
-    const searchQuery = {};
+    const { brandName, activeIngredient, agencyProductNumber, therapeuticClass, patentNumber } = req.body;
+    const searchQuery = {
+      $or: [
+        { agencyProductNumber: agencyProductNumber },
+        { brandName: brandName },
+        { activeIngredient: activeIngredient },
+        { therapeuticClass: therapeuticClass }
+      ]
+    };
+    const uniqueAgencyProductNumber = new Set();
+    const agencyProductNumbers = [];
+    const searchResults = [];
+    console.log("searchQuery:", searchQuery);
 
-    Object.keys(searchFields).forEach(key => {
-      searchQuery[key] = new RegExp(searchFields[key], 'i');
-    });
-
-    const results = await EpOverviewModel.find(searchQuery);
-    res.json({
-      status: 200,
-      message: "Search successful",
-      data: results,
-    });
+    const getUniqueAgencyProductNumber = async (records) => {
+      for (let record of records) {
+        if (!uniqueAgencyProductNumber.has(record.ndaNumber)) {
+          uniqueAgencyProductNumber.add(record.ndaNumber);
+          ndaNumbers.push(record.ndaNumber)
+        }
+      }
+    };
+    if (brandName || activeIngredient || ndaNumber || therapeuticClass) {
+      const overviewRequest = await EpOverviewModel.find(searchQuery);
+      if (overviewRequest.length > 0) {
+        getUniqueAgencyProductNumber(overviewRequest);
+      }
+    }
+    if (patentNumber) {
+      const ipRequest = await EpIpModel.find({ patentNumber: patentNumber });
+      if (ipRequest.length > 0) {
+        getUniqueAgencyProductNumber(ipRequest);
+      }
+    }
+    if (agencyProductNumbers.length > 0) {
+      for (const record of ndaNumbers) {
+        const recordResults = await EpOverviewModel.find({ agencyProductNumber: record });
+        for (const rec of recordResults) {
+          const regulatoryResults = await EpRegulatoryModel.find({ agencyProductNumber: rec.agencyProductNumber });
+          const dateOfApproval = regulatoryResults.length > 0 ? regulatoryResults[0].dateOfApproval : null;
+          const combinedResult = {
+            ...rec._doc,
+            dateOfApproval: dateOfApproval
+          };
+          searchResults.push(combinedResult);
+        }
+      }
+    }
+    if (searchResults.length > 0) {
+      res.json({
+        status: 200,
+        message: "Search successful",
+        result: searchResults,
+      });
+    } else {
+      res.json({
+        status: 401,
+        message: "No value found"
+      });
+    }
   } catch (error) {
     console.error('Error performing specific search:', error);
     res.status(500).json({

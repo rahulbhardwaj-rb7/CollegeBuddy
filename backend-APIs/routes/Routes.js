@@ -33,11 +33,13 @@ InphamedRoute.get("/master/getUserRegion/:userID", getUserRegion);
 
 // ----------------------------------US basic and advance search-----------------
 InphamedRoute.post("/usBasicSearch", getBasicSearchDataForUS);
+
 InphamedRoute.post("/usAdvanceSearch", getAdvanceSearchDataForUS);
 // ------------------------------------------------------------------------------
 
 // ----------------------------------EP basic and advance search-----------------
 InphamedRoute.post("/epBasicSearch", getBasicSearchDataForEP);
+
 InphamedRoute.post("/epAdvanceSearch", getAdvanceSearchDataForEP);
 // ------------------------------------------------------------------------------
 
