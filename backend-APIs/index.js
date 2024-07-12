@@ -4,32 +4,31 @@ import connection from './config/connectiondb.js';
 import InphamedRoute from './routes/Routes.js';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
-import { dirname } from 'path';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger-output.json' assert { type: 'json' };
+// import { dirname } from 'path';
+// import path from 'path';
+// import { fileURLToPath } from 'url';
 
 const app = express();
 dotenv.config()
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 
+app.use('/inphamed/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
+
 const corsOptions = {
     origin: true,
     credentials: true,
 };
 
-
 app.use(cors(corsOptions));
 app.use(cookieParser())
 
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/inphamed/api/v1', InphamedRoute)
-
-
 
 app.use((obj, req, res, next) => {
     const statusCode = obj.status || 500;
@@ -43,8 +42,6 @@ app.use((obj, req, res, next) => {
     });
 });
 
-
-
 app.listen(process.env.port, async () => {
     try {
         await connection;
@@ -54,11 +51,3 @@ app.listen(process.env.port, async () => {
     }
     console.log("Server listening on port " + `http://localhost:${process.env.port}`);
 });
-
-
-
-
-
-
-
-
