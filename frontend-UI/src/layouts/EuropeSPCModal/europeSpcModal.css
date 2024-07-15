@@ -1,0 +1,143 @@
+.custom-modal {
+    max-width: 90% !important;
+    width: 90% !important;
+    height: 90% !important;
+  }
+  
+  .custom-modal .modal-content {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .custom-modal .modal-header {
+    padding: 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-header p {
+    margin: 0px;
+  }
+
+  .spc_modal .spc-title-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 24px;
+    height: 50px;
+  }
+
+  .spc_modal .spc-detail{
+    align-items: flex-start;
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 0px 20px;
+    position: relative;
+    width: 100%;
+  }
+
+  .spc-detail .spc-headers {
+    background-color: #EBF0FE;
+    border: 1px solid #D5DDF4;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 100%;
+    display: flex;
+    height: 90px;
+  }
+
+  .spc_modal .property-patents-second-table {
+    border: 1px solid #d5ddf4;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .spc-detail .brand-name, .spc-detail .active-ingredient, .spc-detail .Country {
+    align-items: flex-start;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    height: 90px;
+    overflow: hidden;
+    padding: 15px 24px 36px;
+    position: relative;
+    width: 20%;
+    border-top-left-radius: 15px;
+  }
+
+  .spc-detail .ep {
+    align-items: flex-start;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    width: 40%;
+    border-top-left-radius: 15px;
+  }
+
+  .spc-detail .ep .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50%;
+    width: 100%;
+  }
+
+  .spc-detail .ep .status {
+    display: flex;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    background-color: #38376A;
+    border-top-left-radius: 15px;
+  }
+
+  .spc-detail .group-7 {
+    width: 50%;
+    padding-left: 24px;
+  }
+
+  .spc_modal .text-wrapper-17 {
+    color: #030229;
+    font-family: "Nunito", Helvetica;
+    font-size: 14px;
+    font-weight: 600;
+    height: 100%;
+    letter-spacing: 0;
+    line-height: 18.2px;
+    position: relative;
+    width: 100%;
+  }
+
+  .spc-detail .spc-rows {
+    height: auto;
+    min-height: 60px;
+    border: 1px solid #D5DDF4;
+    border-top: none;
+  }
+
+  .spc-rows .spc-rows-cell {
+    width: 20%;
+    padding: 12px 24px;
+  }
+
+  .spc-detail .last-row {
+    border-bottom-left-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+  }
+
+
+  .scrollable-table {
+    min-height: 520px;
+    width: 100%; /* Adjust this height as needed */
+    overflow-y: auto;
+  }
+
+  .crossButton {
+    background: transparent;
+    cursor: pointer;
+  }
+  

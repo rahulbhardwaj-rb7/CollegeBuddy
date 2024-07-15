@@ -11,27 +11,15 @@ type OutletContextType = {
 };
 
 const DashboardPage = () => {
-  const [showSearchDetails, setShowSearchDetails] = useState(
-    sessionStorage.getItem("showSearchDetails") === "true"
-  );
+  const [showSearchDetails, setShowSearchDetails] = useState(false);
   const { toggleSearchBar } = useOutletContext<OutletContextType>();
   const [searchParams, setSearchParams] = useState({
-    basicSearch: sessionStorage.getItem("basicSearch") || "",
-    advanceSearch_1: sessionStorage.getItem("advanceSearch_1") || "",
-    advanceSearch_2: sessionStorage.getItem("advanceSearch_2") || "",
-    advanceSearch_3: sessionStorage.getItem("advanceSearch_3") || "",
-    advanceSearch_4: sessionStorage.getItem("advanceSearch_4") || "",
-    advanceSearch_5: sessionStorage.getItem("advanceSearch_5") || "",
+    basicSearch: ""
   });
-  const [result, setResult] = useState(
-    JSON.parse(sessionStorage.getItem("result") || "[]")
-  );
-  const [resultHeading, setResultHeading] = useState(
-    sessionStorage.getItem("resultHeading") || ""
-  );
-  const [resultSubHeading, setResultSubHeading] = useState(
-    sessionStorage.getItem("resultSubHeading") || ""
-  );
+  const [advanceSearchParams, setAdvanceSearchParams] = useState([]);
+  const [result, setResult] = useState([]);
+  const [resultHeading, setResultHeading] = useState("");
+  const [resultSubHeading, setResultSubHeading] = useState("No Data Found");
 
   useEffect(() => {
     toggleSearchBar(false);
@@ -39,11 +27,12 @@ const DashboardPage = () => {
 
   const navigate = useNavigate();
 
-  const navigateToDetails = (ndaNumber: any) => {
+  const navigateToDetails = (ndaNumber: any, brandName: any) => {
     console.log("index", ndaNumber);
 
     toggleSearchBar(true);
     sessionStorage.setItem("ndaNumber", ndaNumber);
+    sessionStorage.setItem("brandName", brandName);
     const region = sessionStorage.getItem("selected_region");
     if (region === "USA") {
       navigate("/inphamed/usa-search-result");
@@ -54,37 +43,103 @@ const DashboardPage = () => {
 
   const handleBasicSearch = async () => {
     console.log("i m here", searchParams);
+    setResultSubHeading("No Data Found");
 
     try {
       const value = searchParams.basicSearch;
+      if(value === "" || value === null || value.length < 3) {
+        sessionStorage.removeItem("result");
+        setResult([]);
+        const msg = "Please enter a search value of at least 3 characters.";
+        toast.error(msg, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          });
+          return;
+      }
       console.log(value);
-      setResultHeading(value);
-      setResultSubHeading(value);
 
       const region = sessionStorage.getItem("selected_region");
       const url =
         region === "USA"
-          ? "http://localhost:3000/inphamed/api/v1/usBasicSearch"
-          : "http://localhost:3000/inphamed/api/v1/epBasicSearch";
+          ? `${process.env.URL}usBasicSearch`
+          : `${process.env.URL}epBasicSearch`;
       console.log(url);
 
       const response = await axios.post(url, {
         simpleSearch: value,
       });
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.result.length > 0) {
         const data = response.data.result;
         setResult(data);
         setShowSearchDetails(true);
-
-        // Save state to session storage
-        sessionStorage.setItem("result", JSON.stringify(data));
-        sessionStorage.setItem("resultHeading", value);
-        sessionStorage.setItem("resultSubHeading", value);
-        sessionStorage.setItem("showSearchDetails", "true");
+        setResultHeading(value);
+        if(data.length > 0) {
+          setResultSubHeading(value);
+        }
+      } else {
+        setResult([]);
       }
     } catch (error: any) {
+      setResult([]);
       const msg = error.response.data.message;
-      toast.error(msg, {
+        if(msg === 'No value found') return;
+        toast.error(msg, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          });
+    } finally {
+    }
+  };
+
+  const handleAdvanceSearch = async (fields: any) => {
+    try {
+      const value = searchParams.basicSearch;
+       // Check for duplicate keys
+    const seenKeys: Set<string> = new Set();
+    let hasError = false;
+    let errorMessage = "";
+
+    const filteredFields = fields.filter((field: any) => {
+      return !(field.selectedOption === "allFields" && field.inputValue.trim() === "");
+    });
+
+    console.log(filteredFields);
+    
+
+    filteredFields.forEach((field: any) => {
+      if (seenKeys.has(field.selectedOption) && field.selectedOption !== "allFields") {
+        // Duplicate key found, show toaster error
+        hasError = true;
+        errorMessage = "Please select different search categories";
+        return;
+      }
+      seenKeys.add(field.selectedOption);
+
+      if (field.selectedOption === "allFields" && field.inputValue.trim() !== "") {
+        // "All Fields" with non-empty value found, show toaster error
+        hasError = true;
+        errorMessage = "please select a category for input value";
+        return;
+      }
+    });
+
+    if(hasError) {
+      toast.error(errorMessage, {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -95,28 +150,51 @@ const DashboardPage = () => {
         theme: "light",
         transition: Bounce,
         });
-    } finally {
-    }
-  };
+    } else {
 
-  const handleAdvanceSearch = async () => {
-    try {
-      console.log("i m here");
-      handleBasicSearch();
+      const body: Record<string, string> = {};
+      
+      filteredFields.forEach((field: any) => {
+        if (field.selectedOption !== "allFields") {
+          body[field.selectedOption] = field.inputValue;
+        }
+      });
+
+      const values = Object.values(body).filter(value => value);  // Filter out empty strings or falsy values
+const commaSeparatedValues = values.join(',');
+
+      console.log("Body for API request:", body);
+
+      const region = sessionStorage.getItem("selected_region");
+      const url =
+        region === "USA"
+          ? `${process.env.URL}usAdvanceSearch`
+          : `${process.env.URL}epAdvanceSearch`;
+      console.log(url);
+
+      const response = await axios.post(url, body);
+      console.log(response);
+      if (response.status === 200) {
+        const data = response.data.result;
+        setResult(data);
+        setShowSearchDetails(true);
+        setResultHeading(commaSeparatedValues);
+        if(data.length > 0) {
+          setResultSubHeading(commaSeparatedValues);
+        } else {
+          setResultSubHeading("No data found")
+          setResult([]);
+        }
+      }
+      
+    }
+      
     } catch (error: any) {
+
     } finally {
+
     }
   };
-
-  useEffect(() => {
-    // Save searchParams state to session storage whenever it changes
-    sessionStorage.setItem("basicSearch", searchParams.basicSearch);
-    sessionStorage.setItem("advanceSearch_1", searchParams.advanceSearch_1);
-    sessionStorage.setItem("advanceSearch_2", searchParams.advanceSearch_2);
-    sessionStorage.setItem("advanceSearch_3", searchParams.advanceSearch_3);
-    sessionStorage.setItem("advanceSearch_4", searchParams.advanceSearch_4);
-    sessionStorage.setItem("advanceSearch_5", searchParams.advanceSearch_5);
-  }, [searchParams]);
 
   return (
     <div>
@@ -133,11 +211,11 @@ const DashboardPage = () => {
         </div>
       </div>
       {/* ------------------------------------------------------------ */}
-      {showSearchDetails && (
+      {(showSearchDetails) && (
         <div className="search-result">
           <div className="heading">
             <b className="search-results-for">
-              Search Results for "{resultHeading}"
+              Search result for "{resultHeading}"
             </b>
           </div>
           <div className="search-result2">
@@ -145,8 +223,8 @@ const DashboardPage = () => {
               <b className="paracetamol">{resultSubHeading}</b>
             </div>
             <div className="table-content">
-              {result.map((row: any, _index: any) => (
-                <div className="content" key={_index} onClick={() => navigateToDetails(row.ndaNumber)}>
+              {result?.map((row: any, _index: any) => (
+                <div className="content" key={_index} onClick={() => sessionStorage.getItem("selected_region") === "USA" ? navigateToDetails(row.ndaNumber, row.brandName) : navigateToDetails(row.agencyProductNumber, row.brandName)}>
                   <div className="row-11">
                     <div className="ibrance2">{row.brandName}</div>
                     <div className="row-1-child"></div>
@@ -160,7 +238,7 @@ const DashboardPage = () => {
                     <div className="row-1-child"></div>
                     <div className="tablet">{row.dateOfApproval}</div>
                     <div className="row-1-child"></div>
-                    <div className="tablet">{row.numberOfGenericsForFilers}</div>
+                    <div className="tablet">{sessionStorage.getItem("selected_region") === "USA" ? row.ndaNumber : row.agencyProductNumber}</div>
                   </div>
                 </div>
               ))}
@@ -203,7 +281,8 @@ const DashboardPage = () => {
                   <stop offset="100%" stop-color="#9733EE" />
                 </linearGradient>
               </defs>
-              <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+              <circle cx="80" cy="80" r="70" stroke-linecap="round" style={{
+    strokeDashoffset: `200px`}} />
             </svg>
           </div>
           <div className="content">
@@ -246,7 +325,8 @@ const DashboardPage = () => {
                   <stop offset="100%" stop-color="#9733EE" />
                 </linearGradient>
               </defs>
-              <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+              <circle cx="80" cy="80" r="70" stroke-linecap="round" style={{
+    strokeDashoffset: `200px`}} />
             </svg>
           </div>
           <div className="content">
@@ -302,7 +382,8 @@ const DashboardPage = () => {
                   <stop offset="100%" stop-color="#9733EE" />
                 </linearGradient>
               </defs>
-              <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+              <circle cx="80" cy="80" r="70" stroke-linecap="round" style={{
+    strokeDashoffset: `200px`}} />
             </svg>
           </div>
           <div className="content">
@@ -354,7 +435,8 @@ const DashboardPage = () => {
                   <stop offset="100%" stop-color="#9733EE" />
                 </linearGradient>
               </defs>
-              <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+              <circle cx="80" cy="80" r="70" stroke-linecap="round" style={{
+    strokeDashoffset: `200px`}} />
             </svg>
           </div>
           <div className="content">
@@ -438,7 +520,8 @@ const DashboardPage = () => {
                   <stop offset="100%" stop-color="#9733EE" />
                 </linearGradient>
               </defs>
-              <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+              <circle cx="80" cy="80" r="70" stroke-linecap="round" style={{
+    strokeDashoffset: `200px`}} />
             </svg>
           </div>
 

@@ -12,6 +12,7 @@ import axios from "axios";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { URL } from "url";
 
 
 const ResetPasswordPage = () => {
@@ -29,7 +30,7 @@ const ResetPasswordPage = () => {
   const handleSendEmail = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/forgot/password", {
+      const response = await axios.post(`${process.env.URL}auth/forgot/password`, {
         email: email
       })
       if(response.status === 200){
@@ -82,7 +83,7 @@ const ResetPasswordPage = () => {
     e.preventDefault();
     try{
       const enteredOtp = otp.join('');
-      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/forgot/password/otpSubmit", {
+      const response = await axios.post(`${process.env.URL}auth/forgot/password/otpSubmit`, {
         otp_id: sessionStorage.getItem("otp_id"),
         otp: enteredOtp
       })

@@ -73,7 +73,7 @@ const SetPasswordPage = () => {
         }
 
         const response = await axios.put(
-          "http://localhost:3000/inphamed/api/v1/auth/forgot/password/updatePassword",
+          `${process.env.URL}auth/forgot/password/updatePassword`,
           {
             userID: userId,
             password: newPassword,

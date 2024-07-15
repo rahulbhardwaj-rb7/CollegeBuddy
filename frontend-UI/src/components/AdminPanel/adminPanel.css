@@ -428,6 +428,8 @@
     line-height: normal;
     opacity: 0.7;
     position: relative;
+    width: 100%;
+    overflow: hidden;
   }
   
   .europe-drug-profile .div-wrapper-3 {
@@ -4219,14 +4221,10 @@
     stroke: #9e028f;
     stroke-width: 20px;
     stroke-dasharray: 450;
-    stroke-dashoffset: 450;
+    /* stroke-dashoffset: 450; */
     animation: anima 1s linear forwards;
   }
-  @keyframes anima {
-    100%{
-        stroke-dashoffset: 150;
-    }
-  }
+
   .custome_svg {
     position: relative;
     top: -160px;
@@ -4331,4 +4329,86 @@
 
 .main-container-with-sidebar {
   width: 82%;
+}
+
+.europe-drug-profile .product-information, .regulatory-information, .us-litigation-container {
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 0px 7px #0000001a;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  width:100%;
+}
+
+.europe-drug-profile .regulatory-information .div-3 {
+  padding: 0px 20px 0px 20px;
+}
+
+.europe-drug-profile .regulatory-information-row {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  position: relative;
+  width: 100%;
+  height: max-content;
+  border: 1px solid;
+  border-color: #d5ddf4;
+  border-right: none;
+  border-top: none;
+  align-items: stretch;
+}
+
+.europe-drug-profile .regulatory-information-row .key {
+  align-items: center;
+  background-color: #f5f7fa;
+  border-right: 1px solid;
+  border-color: #d5ddf4;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 25px;
+  position: relative;
+  width: 16.7%;
+  height: auto;
+  min-height: 100%;
+}
+
+.europe-drug-profile .regulatory-information-row .value {
+  align-items: center;
+  border-right: 1px solid;
+  border-color: #d5ddf4;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 25px;
+  position: relative;
+  width: 16.7%;
+  height: auto;
+  min-height: 100%;
+}
+
+.europe-drug-profile   .api-manufacturing-status, .clinical-trials, .intellectual-property-patents, .us-launch {
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 0px 7px #0000001a;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.europe-drug-profile .intellectual-property-patents .table {
+  --bs-table-bg: none;
+}
+
+.europe-drug-profile .intellectual-property-patents .text-wrapper-10 {
+  padding: 0px;
 }

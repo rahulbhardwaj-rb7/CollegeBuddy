@@ -132,11 +132,7 @@ circle {
     stroke-dashoffset: 450;
     animation: anima 1s linear forwards;
 }
-@keyframes anima {
-    100%{
-        stroke-dashoffset: 150;
-    }
-}
+
 .custome_svg {
     position: relative;
     top: -160px;
@@ -409,9 +405,6 @@ circle {
     opacity: 0.5;
 }
 .row-11 {
-    position: absolute;
-    top: 0px;
-    left: 0px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -439,9 +432,14 @@ circle {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 20px 50px;
-    gap: 40px;
+    padding: 10px 50px;
+    gap: 5px;
 }
+
+.table-content .content {
+    justify-content: flex-start;
+}
+
 .search-result2 {
     overflow: hidden;
     display: flex;

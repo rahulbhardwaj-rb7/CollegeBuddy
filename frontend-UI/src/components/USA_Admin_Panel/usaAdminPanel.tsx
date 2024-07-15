@@ -1,12 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./usaAdminPanel.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
+import LitigationModal from "../../layouts/UsLitigationModal/usLitigationModal";
+
+type OutletContextType = {
+  toggleSearchBar: (show: boolean) => void;
+  showSearchBar: boolean;
+};
 
 export const USAAdminPanel = () => {
 
   const navigate = useNavigate();
   const [tabNo, setTabNo] = useState(1);
+  const { toggleSearchBar } = useOutletContext<OutletContextType>();
+
 
   const onTabClick = (tab: any) => {
     setTabNo(tab);
@@ -44,9 +52,15 @@ export const USAAdminPanel = () => {
   const usLaunch = useRef<HTMLDivElement>(null);
   const regulatoryInformation = useRef<HTMLDivElement>(null);
   const intellectualPropertyPatents = useRef<HTMLDivElement>(null);
-  const [productInfo, setProductInfo] = useState([]);
-  const [regulatoryInfo, setRegulatoryInfo] = useState([]);
-  const [ipInfo, setIpInfo] = useState([]);
+  const [productInfo, setProductInfo] = useState<any[]>([]);
+  const [regulatoryInfo, setRegulatoryInfo] = useState<any[]>([]);
+  const [ipInfo, setIpInfo] = useState<any[]>([]);
+  const [probability, setProbability] = useState<any[]>([]);
+  const [litigationSummary, setLitigationSummary] = useState<any[]>([]);
+  const [litigationAndaFilers, setLitigationAndaFilers] = useState<any[]>([]);
+  const [usPetition, setUsPetition] = useState<any[]>([]);
+
+
 
 
   // Scroll function to scroll a given ref into view
@@ -61,18 +75,29 @@ export const USAAdminPanel = () => {
       const fetchData = async () => {
         try {
           const ndaNumber = sessionStorage.getItem("ndaNumber");
-          const usOverview = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsOverview?ndaNumber=${ndaNumber}`);
-          const usRegulatory = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsRegulatory?ndaNumber=${ndaNumber}`)
-          const usIp = await axios.get(`http://localhost:3000/inphamed/api/v1/getUsRegulatory?ndaNumber=${ndaNumber}`)
+          const usOverview = await axios.get(`${process.env.URL}getUsOverview?ndaNumber=${ndaNumber}`);
+          const usRegulatory = await axios.get(`${process.env.URL}getUsRegulatory?ndaNumber=${ndaNumber}`)
+          const usIp = await axios.get(`${process.env.URL}getUsip?ndaNumber=${ndaNumber}`)
+          const usProbability = await axios.get(`${process.env.URL}getUsProbability?ndaNumber=${ndaNumber}`)
+          const usLitigation = await axios.get(`${process.env.URL}getUsLitigationSummary?ndaNumber=${ndaNumber}`)
+          const usAndaFilers = await axios.get(`${process.env.URL}getUsAndaFilers?ndaNumber=${ndaNumber}`)
+          const petition = await axios.get(`${process.env.URL}getUsPitition?ndaNumber=${ndaNumber}`)
 
-          console.log(usOverview, usRegulatory, usIp);
-          
+          if(usOverview.status === 200) setProductInfo(usOverview.data.result);
+          if(usRegulatory.status === 200) setRegulatoryInfo(usRegulatory.data.result);
+          if(usIp.status === 200) setIpInfo(usIp.data.result);
+          if(usProbability.status === 200) setProbability(usProbability.data.result);
+          if(usLitigation.status === 200)  setLitigationSummary(usLitigation.data.result);
+          if(usAndaFilers.status === 200) setLitigationAndaFilers(usAndaFilers.data.result);
+          if(petition.status === 200) setUsPetition(petition.data.result);
+
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
   
       fetchData();
+      toggleSearchBar(true);
     }, []);
 
   // Effect hook to scroll active table into view when it changes
@@ -98,6 +123,32 @@ export const USAAdminPanel = () => {
       scrollIntoView(intellectualPropertyPatents);
     }
   }, [activeTable]);
+
+  const renderTextWithTooltip = (text: string, type: string) => {
+    let showTooltip, displayText;
+    if(type === "text") {
+      showTooltip = text && text.length > 115;
+      displayText = showTooltip ? `${text.substring(0, 115)}...` : text;
+    } else {
+      showTooltip = text && text.length > 30;
+      displayText = showTooltip ? `${text.substring(0, 30)}...` : text;
+    }
+
+    return (
+      <div
+        style={{
+          whiteSpace: 'wrap',
+          height: "100%",
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '100%',
+        }}
+        title={showTooltip ? text : ''}
+      >
+        {displayText}
+      </div>
+    );
+  };
 
   const drugsName: any[] = [
     "Palbociclib",
@@ -179,129 +230,6 @@ export const USAAdminPanel = () => {
     "Hallucinogens"
   ];
 
-  const manufacturingStatusData: any[] = [
-    {
-      BrandName: "Ibrance",
-      DMF: "32273",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "23/03/2018",
-      HOLDER: "HETERO LABS LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32646",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "28/03/2018",
-      HOLDER: "BIOPHORE INDIA PHARMACEUTICALS PVT LTD",
-      ActiveIngredient: "ALBOCICLIB (NON-STERILE DRUG SUBSTANCE)",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-  ];
-
   const epLaunchData: any[] = [
     {
       ActiveIngredients: "Cinacalcet",
@@ -347,118 +275,6 @@ export const USAAdminPanel = () => {
       Route: "Oral",
       Country: "French",
       Marketers: "EG LABO - EuroGenerics Laboratories",
-    },
-  ];
-
-  const litigationDetailData: any[] = [
-    {
-      CaseNumber: "Patent - Abbreviated New Drug Application(ANDA)",
-      Date: "1:21-cv-01567",
-      CourtWithJurisdiction: "-",
-      PlaintiffsAndDefendants: "Delaware District Court",
-      PatentNumber: "Eli Lilly & Co v. MSN LABORATORIES PVT., LTD.",
-      Summary: "US6936612",
-      FilingNumber: "-",
-      ProceedingsInCourt:
-        "Stipulation and Order to Consolidate C.A. No. 23-1277 JLH with C.A. No. 22-1114 JLH. Signed by Judge Jennifer L. Hall on 1/17/2024. Associated Cases: 1:22-cv-01114-JLH, 1:23-cv-01277-JLH",
-    },
-    {
-      CaseNumber: "Patent - Abbreviated New Drug Application(ANDA)",
-      Date: "-",
-      CourtWithJurisdiction: "January 17, 2024",
-      PlaintiffsAndDefendants: "-",
-      PatentNumber: "-",
-      Summary: "-",
-      FilingNumber: "-",
-      ProceedingsInCourt:
-        "Case Reassigned to Judge Jennifer L. Hall. - Associated Cases: 1:22-cv-01114-JLH, 1:22-cv-01115-JLH, 1:23-cv-01277-JLH",
-    },
-  ];
-
-  const litigationBriefData: any[] = [
-    {
-      CaseNumber: "1:21-cv-00284",
-      Date: "Feb 24, 2021",
-      CourtWithJurisdiction: "Delaware District Court",
-      PlaintiffsAndDefendants: "Pfizer Inc. v. Synthon Pharmaceuticals, Inc.",
-      Decision: "",
-      Status: "Closed",
-      PatentNumbers: "US6936612",
-    },
-    {
-      CaseNumber: "1:21-cv-00284",
-      Date: "Feb 24, 2021",
-      CourtWithJurisdiction: "Delaware District Court",
-      PlaintiffsAndDefendants: "Pfizer Inc. v. Synthon Pharmaceuticals, Inc.",
-      Decision: "",
-      Status: "Closed",
-      PatentNumbers: "US6936612",
-    },
-  ];
-
-  const patentLastData: any[] = [
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "BE",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
     },
   ];
 
@@ -525,25 +341,22 @@ export const USAAdminPanel = () => {
     },
   ];
 
-  const drugs: any[] = [
-    {
-      brandName: "IBRANCE",
-      activeIngredient: "PALBOCICLIB",
-      company: "PFIZER INC",
-      therapeuticClass: "Antineoplastics",
-      dosageForm: "Tablet",
-      strengths: [
-        { strength: "75mg", route: "Oral" },
-        { strength: "100mg", route: "Oral" },
-        { strength: "125mg", route: "Oral" }
-      ]
-    }
-  ];
-
   const [sideBarMaximised, setSideBarMaximised] = useState(false);
 
   const sideBarButtonClicked = () => {
     setSideBarMaximised(!sideBarMaximised);
+  };
+
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+
+  const showModal = (index: number) => {
+    setSelectedRowIndex(index);
+  };
+
+  const closeModal = () => {
+    setSelectedRowIndex(null);
+    console.log("modal closed");
+    
   };
 
   return (
@@ -566,14 +379,6 @@ export const USAAdminPanel = () => {
                 src="../src/assets/vectors/Vector14_x2.svg"
               />
               <div className="text-wrapper-35">Drugs</div>
-            </div>
-            <div className="history">
-              <img
-                className="img-2"
-                alt="History"
-                src="../src/assets/vectors/Vector244_x2.svg"
-              />
-              <div className="text-wrapper-36">History</div>
             </div>
             <div className="logout" onClick={() => onLogOutClick()}>
               <img className="img-2"
@@ -618,7 +423,7 @@ export const USAAdminPanel = () => {
               <div className="search-term">
                 <div className="search-term-region">
                   <div className="heading-4">
-                    <div className="text-wrapper-30">Paracetamol</div>
+                    <div className="text-wrapper-30">{sessionStorage.getItem("brandName")}</div>
                   </div>
                   <div className="select-region">
                     <img
@@ -732,7 +537,7 @@ export const USAAdminPanel = () => {
                       </tr>
                     </thead>
                     <tbody>
-      {drugs.map((drug, index) => (
+      {productInfo?.map((drug: any, index: number) => (
         <tr key={index}>
           <td className="product-info-table-cell">
             <div className="table-cell">
@@ -764,25 +569,27 @@ export const USAAdminPanel = () => {
           </td>
           <td className="product-info-table-cell">
             <div className="table-cell">
-              <div className="IBRANCE text-wrapper-3">
-                {drug.dosageForm}
-              </div>
-            </div>
-          </td>
-          <td className="product-info-table-cell">
-            <div className="table-cell">
-              {drug.strengths.map((strengthObj: any, idx: number) => (
-                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
-                  {strengthObj.strength}
+              {drug.dosageDetail.map((form: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {form.dosageForm}
                 </div>
               ))}
             </div>
           </td>
           <td className="product-info-table-cell">
             <div className="table-cell">
-              {drug.strengths.map((strengthObj: any, idx: number) => (
-                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
-                  {strengthObj.route}
+              {drug.dosageDetail.map((route: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {route.route}
+                </div>
+              ))}
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              {drug.dosageDetail.map((strength: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {strength.strength}
                 </div>
               ))}
             </div>
@@ -803,104 +610,101 @@ export const USAAdminPanel = () => {
                 </div>
                 <div className="table-head-content">
                   <div className="div-3">
-                    <div className="row">
-                      <div className="NDA-number">
+                    <div className="regulatory-information-row">
+                      <div className="key">
                         <div className="text-wrapper-4">
-                        NDA Number/ BLA Number
+                        NDA Number
                         </div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">EMEA/H/C/003853</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.ndaNumber}</div>
                       </div>
-                      <div className="div-wrapper-3">
+                      <div className="key">
                         <div className="text-wrapper-6">Date of Approval</div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">Nov 9, 2016</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.dateOfApproval}</div>
                       </div>
-                      <div className="div-wrapper-3">
+                      <div className="key">
                         <div className="text-wrapper-4">
                         NCE Exclusivity
                         </div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">Nov 9, 2026</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{renderTextWithTooltip(regulatoryInfo[0]?.nceExclusivity, "text")}</div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="GAIN-exclusivity">
+                    <div className="regulatory-information-row">
+                      <div className="key">
                         <div className="text-wrapper-6">GAIN Exclusivity</div>
                       </div>
-                      <div className="not-applicable">
+                      <div className="value">
                         <p className="p">
-                          May 30, 2017; Treatment of spinal muscular atrophy
-                          (SMA) in pediatric and adult patients.
+                          {regulatoryInfo[0]?.gainExclusivity}
                         </p>
                       </div>
-                      <div className="div-wrapper-4">
+                      <div className="key">
                         <div className="text-wrapper-6">Orphan Exclusivity</div>
                       </div>
-                      <div className="not-applicable">
-                        <div className="text-wrapper-5">Granted</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.orphanExclusivity}</div>
                       </div>
-                      <div className="div-wrapper-4">
+                      <div className="key">
                         <div className="text-wrapper-6">
                           Pediatric Exclusivity
                         </div>
                       </div>
-                      <div className="not-applicable">
+                      <div className="value">
                         <p className="p">
-                          Yes <br />
-                          Date of completion of the paediatric investigation
-                          plan by August 2017
+                          {regulatoryInfo[0]?.pediatricExclusivity}
                         </p>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="div-wrapper-therapy">
+                    <div className="regulatory-information-row">
+                      <div className="key">
                         <p className="text-wrapper-7">
-                        Therapy Area/ Mechanism of action
+                        BLA Number
                         </p>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Breast cancer</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.blaNumber}</div>
                       </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">BCS Class</div>
+                      <div className="key">
+                        <div className="text-wrapper-6">Approved Indication</div>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Class II</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{renderTextWithTooltip(regulatoryInfo[0]?.approvedIndication, "text")}</div>
                       </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">Label</div>
+                      <div className="key">
+                        <div className="text-wrapper-6">Latest Indication</div>
                       </div>
-                      <div className="div-wrapper-6">
+                      <div className="value">
                         <div className="text-wrapper-8">
-                          Latest indication PDF attach
+                          {regulatoryInfo[0]?.latestIndication}
                         </div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="div-wrapper-submission">
-                        <div className="text-wrapper-6">Submission</div>
+                    <div className="regulatory-information-row" style={{borderBottom: '1px solid #d5ddf4'}}>
+                      <div className="key">
+                        <div className="text-wrapper-6">Approved Indication Link</div>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Centralized</div>
+                      <div className="value">
+                        <div className="text-wrapper-5"><a href={regulatoryInfo[0]?.approvedIndicationLink} target="_blank" rel="noopener noreferrer">{renderTextWithTooltip(regulatoryInfo[0]?.approvedIndicationLink, "link")}</a></div>
                       </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">Review Priority</div>
+                      <div className="key">
+                        <div className="text-wrapper-6">Latest Indication Link</div>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">PRIORITY</div>
+                      <div className="value">
+                        <div className="text-wrapper-5"><a href={regulatoryInfo[0]?.latestIndicationLink} target="_blank" rel="noopener noreferrer">{renderTextWithTooltip(regulatoryInfo[0]?.latestIndicationLink, "link")}</a></div>
                       </div>
-                      <div className="div-wrapper-7">
+                      <div className="key">
                         <div className="text-wrapper-6">Marketing Status</div>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Prescription</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.markettingStatus}</div>
                       </div>
                     </div>
-                    <div className="row">
+                    {/* <div className="regulaory-information-row">
                       <div className="div-wrapper-submission">
                         <div className="text-wrapper-6">Specific Technology if any</div>
                       </div>
@@ -913,7 +717,7 @@ export const USAAdminPanel = () => {
                       <div className="div-wrapper-6">
                         <div className="text-wrapper-5">None</div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -934,16 +738,16 @@ export const USAAdminPanel = () => {
                         <div className="element-3">
                           <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Brand name</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {ipInfo.map((row: any, index: number) => (
                           <div
                             className={
-                              index == patentData.length - 1
+                              index == ipInfo.length - 1
                                 ? "element-5"
                                 : "element-4"
                             }
                           >
                             <div className="text-wrapper-10" style={{paddingTop: '0px'}}>
-                              {row.BrandName}
+                              {row.brandName}
                             </div>
                           </div>
                         ))}
@@ -955,10 +759,10 @@ export const USAAdminPanel = () => {
                               Active ingredient
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
-                            <div className={`element-7 ${index === patentData.length-1 ? 'scroll-margin' : ''}`}>
+                          {ipInfo.map((row: any, index: number) => (
+                            <div className={`element-7 ${index === ipInfo.length-1 ? 'scroll-margin' : ''}`}>
                               <div className="text-wrapper-10">
-                                {row.ActiveIngredient}
+                                {row.activeIngredient}
                               </div>
                             </div>
                           ))}
@@ -967,10 +771,10 @@ export const USAAdminPanel = () => {
                           <div className="element-6">
                             <div className="text-wrapper-9">Type of patent</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: number) => (
                             <div className="element-7">
                               <div className="text-wrapper-10">
-                                {row.TypeOfPatent}
+                                {row.typeOfPatent}
                               </div>
                             </div>
                           ))}
@@ -981,10 +785,10 @@ export const USAAdminPanel = () => {
                               Dosage Form
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: number) => (
                             <div className="element-9">
                               <div className="text-wrapper-10">
-                                {row.EquivalentFamily}
+                                {row.dosageForm}
                               </div>
                             </div>
                           ))}
@@ -993,10 +797,10 @@ export const USAAdminPanel = () => {
                           <div className="element-8">
                             <div className="text-wrapper-9">Strength</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-9">
                               <div className="text-wrapper-10">
-                                {row.PatentNumber}
+                                {row.strength}
                               </div>
                             </div>
                           ))}
@@ -1007,10 +811,10 @@ export const USAAdminPanel = () => {
                               Equivalent Family
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: number) => (
                             <div className="element-11">
                               <div className="text-wrapper-10">
-                                {row.CurrentAssignee}
+                                {row.equivalentFamily}
                               </div>
                             </div>
                           ))}
@@ -1019,10 +823,10 @@ export const USAAdminPanel = () => {
                           <div className="element-12">
                             <div className="text-wrapper-9">Patent Number</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row :any, index: any) => (
                             <div className="element-13">
                               <div className="text-wrapper-10">
-                                {row.Status}
+                                {row.patentNumber}
                               </div>
                             </div>
                           ))}
@@ -1031,9 +835,9 @@ export const USAAdminPanel = () => {
                           <div className="element-14">
                             <div className="text-wrapper-9">Current Assignee</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-10">{row.SPC}</div>
+                              <div className="text-wrapper-10">{row.currentAssignee}</div>
                             </div>
                           ))}
                         </div>
@@ -1041,9 +845,9 @@ export const USAAdminPanel = () => {
                           <div className="element-14">
                             <div className="text-wrapper-9">OB Listed</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-11">{row.PED}</div>
+                              <div className="text-wrapper-11">{row.obListed}</div>
                             </div>
                           ))}
                         </div>
@@ -1051,9 +855,9 @@ export const USAAdminPanel = () => {
                           <div className="element-14">
                             <div className="text-wrapper-9">Status</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-11">{row.PED}</div>
+                              <div className="text-wrapper-11">{row.status}</div>
                             </div>
                           ))}
                         </div>
@@ -1061,9 +865,9 @@ export const USAAdminPanel = () => {
                           <div className="element-14">
                             <div className="text-wrapper-9">PTE</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-11">{row.PED}</div>
+                              <div className="text-wrapper-11">{row.pet}</div>
                             </div>
                           ))}
                         </div>
@@ -1075,10 +879,10 @@ export const USAAdminPanel = () => {
                               (inc. PTE PED)
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-11">
                               <div className="text-wrapper-11">
-                                {row.EstimatedExpiry}
+                                {row.ped}
                               </div>
                             </div>
                           ))}
@@ -1089,10 +893,10 @@ export const USAAdminPanel = () => {
                               Independent claims coverage brief
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-18">
-                              <div className="text-wrapper-10">
-                                {row.IndependentClaimsCoverageBrief}
+                              <div className="text-wrapper-10" style={{height:'100%'}}>
+                                {renderTextWithTooltip(row.independentClaims, "text")}
                               </div>
                             </div>
                           ))}
@@ -1102,21 +906,21 @@ export const USAAdminPanel = () => {
                         <div className="element-19 w-100">
                           <div
                             className="text-wrapper-9"
-                            style={{ marginTop: "-12px" }}
+                            style={{ marginTop: "-12px", paddingLeft: "0px" }}
                           >
                             Proposed Strategy for PARA IV scenario
                           </div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {ipInfo.map((row: any, index :any) => (
                           <div
                             className={`${
-                              index == patentData.length - 1
+                              index == ipInfo.length - 1
                                 ? "element-21"
                                 : "element-20"
                             } w-100`}
                           >
                             <div className="text-wrapper-10">
-                              {row.ProposedStrategy}
+                              {renderTextWithTooltip(row.proposedStrategyForPARA, "text")}
                             </div>
                           </div>
                         ))}
@@ -1135,7 +939,7 @@ export const USAAdminPanel = () => {
                         <div className="outer">
                             <div className="inner">
                                 <div id="logo_container" style={{display:'flex'}}>
-                                    <span style={{fontSize:'2.3rem', fontWeight:'700', fontStyle:'normal'}}>60</span>
+                                    <span style={{fontSize:'2.3rem', fontWeight:'700', fontStyle:'normal'}}>{probability[0]?.launchProbability}</span>
                                     <span style={{paddingTop:'15px', fontSize:'1.3rem', fontWeight:'600', fontStyle:'normal'}}>%</span>
                                 </div>
                             </div>
@@ -1147,7 +951,10 @@ export const USAAdminPanel = () => {
                                     <stop offset="100%" stop-color="#9733EE" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+                            <circle cx="80" cy="80" r="70" stroke-linecap="round"   style={{
+    strokeDashoffset: `${(100 - probability[0]?.launchProbability || 0) * 4.5}px`,
+    // Other inline styles as needed
+  }} />
                         </svg>
                     </div>
                     
@@ -1160,34 +967,8 @@ export const USAAdminPanel = () => {
                       </div>
                       <div className="text-perception">
                         <div className="flexcontainer">
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              The brand drug&#39;s exclusive marketing rights
-                              prevents generics from launching until November 9,
-                              2026. <br />
-                            </span>
-                          </p>
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              Companies can begin selling generic versions of
-                              the drug after January 10, 2028, after the product
-                              patent EP&#39;124 expires (including any
-                              Supplementary Protection Certificate, which might
-                              be extended by 6 months if a Pediatric Extension
-                              of Data is granted). The generic versions must
-                              have a different composition as in EP&#39;565 and
-                              use a crystalline form other than A covered in
-                              EP&#39; 916, EP&#39;475, both of which cannot
-                              infringe on the original patent. <br />
-                            </span>
-                          </p>
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              Companies can start selling generic versions of
-                              the drug with same crystalline form and
-                              composition after the composition patent
-                              EP&#39;565 expires on May 24, 2036.
-                            </span>
+                          <p className="span-wrapper" style={{whiteSpace: "pre-line"}}>
+                            {probability[0]?.launchPerceptions}
                           </p>
                         </div>
                       </div>
@@ -1203,7 +984,7 @@ export const USAAdminPanel = () => {
                     </div>
                   </div>
                 </div>
-                <div className="d-flex">
+                <div className="d-flex" style={{width: "100%"}}>
                 <div className="d-flex flex-column w-50" style={{padding:'0px 10px 40px 20px'}} >
                 <div className="div-9 w-100 round-top-border-left round-top-border-right us-litigation-headers-left d-flex align-items-center" style={{
                           backgroundColor: "#FEF4EB"
@@ -1259,49 +1040,49 @@ export const USAAdminPanel = () => {
                       </div>
                     </div>
                   </div>
-                  {litigationDetailData?.map((row, index) => (
+                  {litigationAndaFilers?.map((row, index) => (
                     <div
                       className={`div-9 w-100 us-litigation d-flex align-items-center ${
-                        index == litigationDetailData.length - 1
+                        index == litigationAndaFilers.length - 1
                           ? "round-border-left round-border-right"
                           : ""
-                      }`}
+                      }`} style={{minHeight:"80px"}}
                     >
                       <div className="div-6" style={{ width: "25%" }}>
                         <div
                           className={`element-30 w-100 ${
-                            index == litigationDetailData.length - 1
+                            index == litigationAndaFilers.length - 1
                               ? "round-border-left"
                               : ""
                           }`} style={{border:'none', height:'auto'}}
                         >
                           <div className="text-wrapper-10">
-                            {row.CaseNumber}
+                            {row.f2f}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
-                          <div className="text-wrapper-10">{row.Date}</div>
+                          <div className="text-wrapper-10">{row.numberOfANDAs}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
                           <div className="text-wrapper-10">
-                            {row.CourtWithJurisdiction}
+                            {row.dateOfANDAsubmission}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div
                           className={`element-41 w-100 ${
-                            index == litigationDetailData.length - 1
+                            index == litigationAndaFilers.length - 1
                               ? "round-border-right"
                               : ""
                           }`} style={{border:'none', height:'auto'}}
                         >
                           <div className="text-wrapper-10">
-                            {row.ProceedingsInCourt}
+                            {row.monthsExpirationDate}
                           </div>
                         </div>
                       </div>
@@ -1310,7 +1091,7 @@ export const USAAdminPanel = () => {
                 </div>
                 <div className="d-flex flex-column w-50" style={{padding:'0px 20px 40px 10px'}} >
                 <div className="div-9 w-100 round-top-border-left round-top-border-right us-litigation-headers-right d-flex align-items-center" style={{
-                          backgroundColor: "#FFF4D8", height:'77px'
+                          backgroundColor: "#FFF4D8", height:'60px'
                         }}>
                     <div className="div-6" style={{ width: "25%" }}>
                       <div
@@ -1367,49 +1148,50 @@ export const USAAdminPanel = () => {
                       </div>
                     </div>
                   </div>
-                  {litigationDetailData?.map((row, index) => (
+                  {usPetition?.map((row, index) => (
                     <div
                       className={`div-9 w-100 us-litigation-right d-flex align-items-center ${
-                        index == litigationDetailData.length - 1
+                        index == usPetition.length - 1
                           ? "round-border-left round-border-right"
                           : ""
                       }`}
+                      style={{minHeight: "80px"}}
                     >
                       <div className="div-6" style={{ width: "25%" }}>
                         <div
                           className={`element-30 w-100 ${
-                            index == litigationDetailData.length - 1
+                            index == usPetition.length - 1
                               ? "round-border-left"
                               : ""
                           }`} style={{border:'none', height:'auto'}}
                         >
                           <div className="text-wrapper-10">
-                            {row.CaseNumber}
+                            {row.title}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
-                          <div className="text-wrapper-10">{row.Date}</div>
+                          <div className="text-wrapper-10">{row.docketID}</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div className="element-34 w-100" style={{border:'none', height:'auto'}}>
                           <div className="text-wrapper-10">
-                            {row.CourtWithJurisdiction}
+                            {row.filedBy}
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "25%" }}>
                         <div
                           className={`element-41 w-100 ${
-                            index == litigationDetailData.length - 1
+                            index == usPetition.length - 1
                               ? "round-border-right"
                               : ""
                           }`} style={{border:'none', height:'auto'}}
                         >
                           <div className="text-wrapper-10">
-                            {row.ProceedingsInCourt}
+                            {row.status}
                           </div>
                         </div>
                       </div>
@@ -1422,19 +1204,25 @@ export const USAAdminPanel = () => {
                     <div className="text-wrapper-21">Litigation Summary</div>
                   </div>
                   <div className="div-9">
-                    <div className="div-6" style={{ width: "14.7%", }}>
+                    <div className="div-6" style={{ width: "12%", }}>
                       <div className="element-29 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Case Number</div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "13.7%" }}>
+                    <div className="div-6" style={{ width: "12%", }}>
                       <div className="element-31 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
-                        <div className="text-wrapper-9">Date</div>
+                        <div className="text-wrapper-9">Nature of Suit</div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "14.7%" }}>
+                    <div className="div-6" style={{ width: "12%" }}>
+                      <div className="element-31 w-100" style={{backgroundColor: "#ebf0fe",
+                          borderColor: "#d5ddf4"}}>
+                        <div className="text-wrapper-9">Filling Date</div>
+                      </div>
+                    </div>
+                    <div className="div-6" style={{ width: "13%" }}>
                       <div className="element-33 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">
@@ -1442,7 +1230,7 @@ export const USAAdminPanel = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "17.6%" }}>
+                    <div className="div-6" style={{ width: "14.5%" }}>
                       <div className="element-35 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">
@@ -1450,19 +1238,19 @@ export const USAAdminPanel = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "10.8%" }}>
+                    <div className="div-6" style={{ width: "11%" }}>
                       <div className="element-37 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Decision</div>
                       </div>
                     </div>
-                    <div className="div-6" style={{ width: "10.8%" }}>
+                    <div className="div-6" style={{ width: "11%" }}>
                       <div className="element-39 w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="text-wrapper-9">Status</div>
                       </div>
                     </div>
-                    <div className="div-8" style={{ width: "17.7%" }}>
+                    <div className="div-8" style={{ width: "14.5%" }}>
                       <div className="frame-wrapper w-100" style={{backgroundColor: "#ebf0fe",
                           borderColor: "#d5ddf4"}}>
                         <div className="frame-2 w-100">
@@ -1476,68 +1264,76 @@ export const USAAdminPanel = () => {
                       </div>
                     </div>
                   </div>
-                  {litigationBriefData?.map((row, index) => (
-                    <div className="div-9 ">
-                      <div className="div-6" style={{ width: "14.7%" }}>
+                  {litigationSummary?.map((row, index) => (
+                    <div className={`div-9 litigationSummaryRows ${
+                      index == litigationSummary.length - 1
+                        ? "round-border-left round-border-right"
+                        : ""
+                    }`} onClick={() => showModal(index)} key={index}>
+                      <div className="div-6" style={{ width: "12%" }} onClick={() => showModal(index)}>
                         <div
-                          className={`element-30 w-100 ${
-                            index == litigationBriefData.length - 1
-                              ? "round-border-left"
-                              : ""
-                          }`} style={{borderColor: '#d5ddf4'}}
+                          className={`element-30 w-100`}
                         >
                           <div className="text-wrapper-10">
-                            {row.CaseNumber}
+                          <a href="#" style={{ color: '#030229', textDecoration: 'underline' }}>{row.caseNumber}</a>
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "13.7%" }}>
-                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
-                          <div className="text-wrapper-10">{row.Date}</div>
+                      <div className="div-6" style={{ width: "12%" }}>
+                        <div className="element-34 w-100">
+                          <div className="text-wrapper-10">{row.natureOfSuit}</div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "14.7%" }}>
-                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
+                      <div className="div-6" style={{ width: "12%" }}>
+                        <div className="element-34 w-100">
+                          <div className="text-wrapper-10">{row.filingDate}</div>
+                        </div>
+                      </div>
+                      <div className="div-6" style={{ width: "13%" }}>
+                        <div className="element-34 w-100">
                           <div className="text-wrapper-10">
-                            {row.CourtWithJurisdiction}
+                            {row.courtJurisdiction}
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "17.6%" }}>
-                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
+                      <div className="div-6" style={{ width: "14.5%" }}>
+                        <div className="element-34 w-100">
                           <div className="text-wrapper-10">
-                            {row.PlaintiffsAndDefendants}
+                            {row.plaintiffsDefendants}
                           </div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "10.8%" }}>
-                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
-                          <div className="text-wrapper-10">{row.Decision}</div>
+                      <div className="div-6" style={{ width: "11%" }}>
+                        <div className="element-34 w-100">
+                          <div className="text-wrapper-10">{row.decision}</div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "10.8%" }}>
-                        <div className="element-34 w-100" style={{borderColor: '#d5ddf4'}}>
-                          <div className="text-wrapper-10">{row.Status}</div>
+                      <div className="div-6" style={{ width: "11%" }}>
+                        <div className="element-34 w-100">
+                          <div className="text-wrapper-10">{row.status}</div>
                         </div>
                       </div>
-                      <div className="div-6" style={{ width: "17.7%" }}>
+                      <div className="div-6" style={{ width: "14.5%" }}>
                         <div
-                          className={`element-41 w-100 ${
-                            index == litigationBriefData.length - 1
-                              ? "round-border-right"
-                              : ""
-                          }`} style={{borderColor: '#d5ddf4'}}
+                          className={`element-41 w-100`}
                         >
-                          <div className="text-wrapper-10" style={{color: '#9D00C6',
-    fontWeight: 'bolder'}}>
-                            {row.PatentNumbers}
-                          </div>
+                          <div className="text-wrapper-10" style={{color: '#9D00C6', fontWeight: 'bolder'}}>
+      {row.petitionNumbers.split(',').map((petitionNumber: any, idx: any) => (
+        <div key={idx}>{petitionNumber}</div>
+      ))}
+    </div>
                         </div>
                       </div>
                     </div>
                   ))}
+                  {selectedRowIndex !== null && (
+                    <LitigationModal show={selectedRowIndex !== null}
+                    onClose={closeModal}
+                    data={litigationSummary[selectedRowIndex]}>
+                    </LitigationModal>
+                  )}
                 </div>
-                <div className="detail-description w-100">
+                {/* <div className="detail-description w-100">
                   <div className="subheading">
                     <div className="text-wrapper-21">Detailed description of Hearings of Litigation </div>
                   </div>
@@ -1713,7 +1509,7 @@ export const USAAdminPanel = () => {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
               <div className="us-launch" ref={usLaunch}>
                 <div className="headline-wrapper">

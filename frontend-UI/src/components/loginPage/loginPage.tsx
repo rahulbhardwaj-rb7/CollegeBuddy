@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -19,6 +19,10 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    sessionStorage.clear();
+  })
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -30,10 +34,11 @@ const LoginPage = () => {
   const getRegion = async () => {
     try {
         const userID = sessionStorage.getItem("user_id");
-        const response = await axios.get(`http://localhost:3000/inphamed/api/v1/master/getUserRegion/${userID}`)
+        const response = await axios.get(`${process.env.URL}master/getUserRegion/${userID}`)
         if(response.status === 200){
             const regions = response.data.data;
             sessionStorage.setItem("regions", regions);
+            sessionStorage.setItem("selected_region", regions[0]);
         }
         navigate('/inphamed');
     } catch (error : any) {
@@ -46,7 +51,7 @@ const LoginPage = () => {
     console.log("email", email, "pswrd", password);
     
     try{
-      const response = await axios.post("http://localhost:3000/inphamed/api/v1/auth/login", {
+      const response = await axios.post(`${process.env.URL}auth/login`, {
         email,
         password,
       });

@@ -1,13 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./adminPanel.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import axios from "axios";
+import SpcModal from "../../layouts/EuropeSPCModal/europeSpcModal";
+
+type OutletContextType = {
+  toggleSearchBar: (show: boolean) => void;
+  showSearchBar: boolean;
+};
 
 export const AdminPanel = () => {
 
-  const [showSCP, setShowSCP] = useState(false);
+  const [showSCP, setShowSCP] = useState(true);
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+
+  const showModal = (index: number) => {
+    setSelectedRowIndex(index);
+  };
+
+  const closeModal = () => {
+    setSelectedRowIndex(null);
+    console.log("modal closed");
+    
+  };
 
   const navigate = useNavigate();
   const [tabNo, setTabNo] = useState(1);
+  const { toggleSearchBar } = useOutletContext<OutletContextType>();
 
   const onTabClick = (tab: any) => {
     setTabNo(tab);
@@ -45,6 +64,13 @@ export const AdminPanel = () => {
   const epLaunch = useRef<HTMLDivElement>(null);
   const regulatoryInformation = useRef<HTMLDivElement>(null);
   const intellectualPropertyPatents = useRef<HTMLDivElement>(null);
+  const [productInfo, setProductInfo] = useState<any[]>([]);
+  const [regulatoryInfo, setRegulatoryInfo] = useState<any[]>([]);
+  const [ipInfo, setIpInfo] = useState<any[]>([]);
+  const [probability, setProbability] = useState<any[]>([]);
+  const [litigationSummary, setLitigationSummary] = useState<any[]>([]);
+  const [litigationAndaFilers, setLitigationAndaFilers] = useState<any[]>([]);
+  const [epPetition, setEpPetition] = useState<any[]>([]);
 
   // Scroll function to scroll a given ref into view
   const scrollIntoView = (ref: React.RefObject<HTMLDivElement> | null) => {
@@ -52,6 +78,33 @@ export const AdminPanel = () => {
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  // Effect hook to make multiple API calls on initial render
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const ndaNumber = sessionStorage.getItem("ndaNumber");
+        const epOverview = await axios.get(`${process.env.URL}getEpOverview?agencyProductNumber=${ndaNumber}`);
+        const epRegulatory = await axios.get(`${process.env.URL}getEpRegulatory?agencyProductNumber=${ndaNumber}`)
+        const epIp = await axios.get(`${process.env.URL}getEpIp?agencyProductNumber=${ndaNumber}`)
+        const epProbability = await axios.get(`${process.env.URL}getEpProbability?agencyProductNumber=${ndaNumber}`)
+
+        if(epOverview.status === 200) setProductInfo(epOverview.data.result);
+        if(epRegulatory.status === 200) setRegulatoryInfo(epRegulatory.data.result);
+        if(epIp.status === 200) setIpInfo(epIp.data.result);
+        if(epProbability.status === 200) setProbability(epProbability.data.result);
+        console.log(epOverview, epRegulatory, epIp, epProbability);
+        
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+      }
+    };
+
+    fetchData();
+    toggleSearchBar(true);
+  }, []);
 
   // Effect hook to scroll active table into view when it changes
   useEffect(() => {
@@ -76,6 +129,8 @@ export const AdminPanel = () => {
       scrollIntoView(intellectualPropertyPatents);
     }
   }, [activeTable]);
+
+  
 
   const drugsName: any[] = [
     "Palbociclib",
@@ -157,129 +212,6 @@ export const AdminPanel = () => {
     "Hallucinogens"
   ];
 
-  const manufacturingStatusData: any[] = [
-    {
-      BrandName: "Ibrance",
-      DMF: "32273",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "23/03/2018",
-      HOLDER: "HETERO LABS LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32294",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "21/12/2017",
-      HOLDER: "MYLAN LABORATORIES LTD",
-      ActiveIngredient: "PALBOCICLIB",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-    {
-      BrandName: "Ibrance",
-      DMF: "32646",
-      STATUS: "A",
-      TYPE: "II",
-      SUBMIT_DATE: "28/03/2018",
-      HOLDER: "BIOPHORE INDIA PHARMACEUTICALS PVT LTD",
-      ActiveIngredient: "ALBOCICLIB (NON-STERILE DRUG SUBSTANCE)",
-      ActiveUSDM: "INDIA",
-      ActiveUSDMF: "Y",
-      ActiveKoreanDMF: "-",
-      ActiveJapaneseDMF: "-",
-      ActiveCOS: "-",
-      GDUFAFeesPayment: "03/04/2018",
-    },
-  ];
-
   const epLaunchData: any[] = [
     {
       ActiveIngredients: "Cinacalcet",
@@ -298,217 +230,34 @@ export const AdminPanel = () => {
       Route: "Oral",
       Country: "French",
       Marketers: "GENERIC ARROWS",
-    },
-    {
-      ActiveIngredients: "Cinacalcet",
-      BrandNames: "Biogaran",
-      Strengths: "30mg/60mg/90mg",
-      DosageForm: "tablets",
-      Route: "Oral",
-      Country: "French",
-      Marketers: "GENERIC ARROWS",
-    },
-    {
-      ActiveIngredients: "Cinacalcet",
-      BrandNames: "Biogaran",
-      Strengths: "30mg/60mg/90mg",
-      DosageForm: "tablets",
-      Route: "Oral",
-      Country: "French",
-      Marketers: "GENERIC ARROWS",
-    },
-    {
-      ActiveIngredients: "Cinacalcet",
-      BrandNames: "BGR",
-      Strengths: "30mg/60mg/90mg",
-      DosageForm: "tablets",
-      Route: "Oral",
-      Country: "French",
-      Marketers: "EG LABO - EuroGenerics Laboratories",
-    },
-  ];
-
-  const litigationDetailData: any[] = [
-    {
-      CaseNumber: "Patent - Abbreviated New Drug Application(ANDA)",
-      Date: "1:21-cv-01567",
-      CourtWithJurisdiction: "-",
-      PlaintiffsAndDefendants: "Delaware District Court",
-      PatentNumber: "Eli Lilly & Co v. MSN LABORATORIES PVT., LTD.",
-      Summary: "US6936612",
-      FilingNumber: "-",
-      ProceedingsInCourt:
-        "Stipulation and Order to Consolidate C.A. No. 23-1277 JLH with C.A. No. 22-1114 JLH. Signed by Judge Jennifer L. Hall on 1/17/2024. Associated Cases: 1:22-cv-01114-JLH, 1:23-cv-01277-JLH",
-    },
-    {
-      CaseNumber: "Patent - Abbreviated New Drug Application(ANDA)",
-      Date: "-",
-      CourtWithJurisdiction: "January 17, 2024",
-      PlaintiffsAndDefendants: "-",
-      PatentNumber: "-",
-      Summary: "-",
-      FilingNumber: "-",
-      ProceedingsInCourt:
-        "Case Reassigned to Judge Jennifer L. Hall. - Associated Cases: 1:22-cv-01114-JLH, 1:22-cv-01115-JLH, 1:23-cv-01277-JLH",
-    },
-  ];
-
-  const litigationBriefData: any[] = [
-    {
-      CaseNumber: "1:21-cv-00284",
-      Date: "Feb 24, 2021",
-      CourtWithJurisdiction: "Delaware District Court",
-      PlaintiffsAndDefendants: "Pfizer Inc. v. Synthon Pharmaceuticals, Inc.",
-      Decision: "",
-      Status: "Closed",
-      PatentNumbers: "US6936612",
-    },
-  ];
-
-  const patentLastData: any[] = [
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "AT",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-    {
-      BrandName: "IBRANCE",
-      ActiveIngredient: "PALBOCICLIB",
-      Country: "BE",
-      Status: "Granted",
-      Expiry: "Jan 10, 2028",
-    },
-  ];
-
-  const patentData: any[] = [
-    {
-      ActiveIngredient: "PALBOCICLIB",
-      BrandName: "IBRANCE",
-      TypeOfPatent: "Drug Substance",
-      EquivalentFamily: "US6936612",
-      PatentNumber: "A",
-      CurrentAssignee: "WARNER LAMBERT",
-      Status: "Granted",
-      SPC: "Granted",
-      PED: "No",
-      EstimatedExpiry: "Feb 8, 2034",
-      IndependentClaimsCoverageBrief:
-        "Claims compound Palbociclib generically.",
-      ProposedStrategy: "After Expiry",
-    },
-    {
-      ActiveIngredient: "PALBOCICLIB",
-      BrandName: "IBRANCE",
-      TypeOfPatent: "Drug Substance",
-      EquivalentFamily: "US6936612",
-      PatentNumber: "A",
-      CurrentAssignee: "WARNER LAMBERT",
-      Status: "Granted",
-      SPC: "Granted",
-      PED: "No",
-      EstimatedExpiry: "Feb 8, 2034",
-      IndependentClaimsCoverageBrief:
-        "Claims compound Palbociclib generically.",
-      ProposedStrategy: "After Expiry",
-    },
-    {
-      ActiveIngredient: "PALBOCICLIB",
-      BrandName: "IBRANCE",
-      TypeOfPatent: "Drug Substance",
-      EquivalentFamily: "US6936612",
-      PatentNumber: "A",
-      CurrentAssignee: "WARNER LAMBERT",
-      Status: "Granted",
-      SPC: "Granted",
-      PED: "No",
-      EstimatedExpiry: "Feb 8, 2034",
-      IndependentClaimsCoverageBrief:
-        "Claims compound Palbociclib generically.",
-      ProposedStrategy: "After Expiry",
-    },
-    {
-      ActiveIngredient: "PALBOCICLIB",
-      BrandName: "IBRANCE",
-      TypeOfPatent: "Drug Substance",
-      EquivalentFamily: "US6936612",
-      PatentNumber: "A",
-      CurrentAssignee: "WARNER LAMBERT",
-      Status: "Granted",
-      SPC: "Granted",
-      PED: "No",
-      EstimatedExpiry: "Feb 8, 2034",
-      IndependentClaimsCoverageBrief:
-        "Claims compound Palbociclib generically.",
-      ProposedStrategy: "After Expiry",
-    },
-  ];
-
-  const drugs: any[] = [
-    {
-      brandName: "IBRANCE",
-      activeIngredient: "PALBOCICLIB",
-      company: "PFIZER INC",
-      therapeuticClass: "Antineoplastics",
-      dosageForm: "Tablet",
-      strengths: [
-        { strength: "75mg", route: "Oral" },
-        { strength: "100mg", route: "Oral" },
-        { strength: "125mg", route: "Oral" }
-      ]
     }
   ];
   
+  const renderTextWithTooltip = (text: string, type: string) => {
+    let showTooltip, displayText;
+    if(type === "text") {
+      showTooltip = text && text.length > 115;
+      displayText = showTooltip ? `${text.substring(0, 115)}...` : text;
+    } else {
+      showTooltip = text && text.length > 30;
+      displayText = showTooltip ? `${text.substring(0, 30)}...` : text;
+    }
+
+    return (
+      <div
+        style={{
+          whiteSpace: 'wrap',
+          height: "100%",
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '100%',
+        }}
+        title={showTooltip ? text : ''}
+      >
+        {displayText}
+      </div>
+    );
+  };
 
   const [sideBarMaximised, setSideBarMaximised] = useState(false);
 
@@ -536,14 +285,6 @@ export const AdminPanel = () => {
                 src="../src/assets/vectors/Vector14_x2.svg"
               />
               <div className="text-wrapper-35">Drugs</div>
-            </div>
-            <div className="history">
-              <img
-                className="img-2"
-                alt="History"
-                src="../src/assets/vectors/Vector244_x2.svg"
-              />
-              <div className="text-wrapper-36">History</div>
             </div>
             <div className="logout" onClick={() => onLogOutClick()}>
               <img className="img-2"
@@ -588,7 +329,7 @@ export const AdminPanel = () => {
               <div className="search-term">
                 <div className="search-term-region">
                   <div className="heading-4">
-                    <div className="text-wrapper-30">Paracetamol</div>
+                    <div className="text-wrapper-30">{sessionStorage.getItem("brandName")}</div>
                   </div>
                   <div className="select-region">
                     <img
@@ -666,7 +407,7 @@ export const AdminPanel = () => {
             </div>
           <div className="dashboard">
             <div className="dashboard-2">
-              <div className="div-2" ref={productKeyInsights}>
+            <div className="product-information" ref={productKeyInsights}>
                 <div className="heading">
                   <div className="headline">
                     <div className="group">
@@ -702,7 +443,7 @@ export const AdminPanel = () => {
                       </tr>
                     </thead>
                     <tbody>
-      {drugs.map((drug, index) => (
+      {productInfo?.map((drug: any, index: number) => (
         <tr key={index}>
           <td className="product-info-table-cell">
             <div className="table-cell">
@@ -734,25 +475,27 @@ export const AdminPanel = () => {
           </td>
           <td className="product-info-table-cell">
             <div className="table-cell">
-              <div className="IBRANCE text-wrapper-3">
-                {drug.dosageForm}
-              </div>
-            </div>
-          </td>
-          <td className="product-info-table-cell">
-            <div className="table-cell">
-              {drug.strengths.map((strengthObj: any, idx: number) => (
-                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
-                  {strengthObj.strength}
+              {drug.dosageDetail.map((form: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {form.dosageForm}
                 </div>
               ))}
             </div>
           </td>
           <td className="product-info-table-cell">
             <div className="table-cell">
-              {drug.strengths.map((strengthObj: any, idx: number) => (
-                <div key={idx} className={`IBRANCE text-wrapper-3 ${(idx !== 0 && idx !== drug.strengths.length-1) ? 'strength-route-margin' : ''}`}>
-                  {strengthObj.route}
+              {drug.dosageDetail.map((route: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {route.route}
+                </div>
+              ))}
+            </div>
+          </td>
+          <td className="product-info-table-cell">
+            <div className="table-cell">
+              {drug.dosageDetail.map((strength: any, idx: number) => (
+                <div key={idx} className={`IBRANCE text-wrapper-3 ${idx !== 0 && idx !== drug.dosageDetail.length - 1 ? 'strength-route-margin' : ''}`}>
+                  {strength.strength}
                 </div>
               ))}
             </div>
@@ -763,7 +506,7 @@ export const AdminPanel = () => {
                   </table>
                 </div>
               </div>
-              <div className="div-2" ref={regulatoryInformation}>
+              <div className="regulatory-information" ref={regulatoryInformation}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-2">
@@ -773,115 +516,90 @@ export const AdminPanel = () => {
                 </div>
                 <div className="table-head-content">
                   <div className="div-3">
-                    <div className="row">
-                      <div className="NDA-number">
+                    <div className="regulatory-information-row" style={{borderTop: '1px solid #d5ddf4'}}>
+                      <div className="key">
                         <div className="text-wrapper-4">
-                          Agency Product Number
+                        Agency Product Number
                         </div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">EMEA/H/C/003853</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.agencyProductNumber}</div>
                       </div>
-                      <div className="div-wrapper-3">
+                      <div className="key">
                         <div className="text-wrapper-6">Date of Approval</div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">Nov 9, 2016</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.dateOfApproval}</div>
                       </div>
-                      <div className="div-wrapper-3">
+                      <div className="key">
                         <div className="text-wrapper-4">
-                          Data + Marketing Exclusivity
+                        Data + MArketing Exclusivity
                         </div>
                       </div>
-                      <div className="div-wrapper-2">
-                        <div className="text-wrapper-5">Nov 9, 2026</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.markettingExclusivity}</div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="GAIN-exclusivity">
+                    <div className="regulatory-information-row">
+                      <div className="key">
                         <div className="text-wrapper-6">Orphan Exclusivity</div>
                       </div>
-                      <div className="not-applicable">
+                      <div className="value">
                         <p className="p">
-                          May 30, 2017; Treatment of spinal muscular atrophy
-                          (SMA) in pediatric and adult patients.
+                          {regulatoryInfo[0]?.orphanDesignated}
                         </p>
                       </div>
-                      <div className="div-wrapper-4">
-                        <div className="text-wrapper-6">SPC</div>
+                      <div className="key">
+                        <div className="text-wrapper-6">Marketing Status</div>
                       </div>
-                      <div className="not-applicable">
-                        <div className="text-wrapper-5">Granted</div>
+                      <div className="value">
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.markettingStatus}</div>
                       </div>
-                      <div className="div-wrapper-4">
+                      <div className="key">
                         <div className="text-wrapper-6">
                           Pediatric Exclusivity
                         </div>
                       </div>
-                      <div className="not-applicable">
+                      <div className="value">
                         <p className="p">
-                          Yes <br />
-                          Date of completion of the paediatric investigation
-                          plan by August 2017
+                          {renderTextWithTooltip(regulatoryInfo[0]?.pediatricExclusivity, "text")}
                         </p>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="div-wrapper-therapy">
+                    <div className="regulatory-information-row" style={{borderBottom: '1px solid #d5ddf4', maxWidth:'66.7%'}}>
+                      <div className="key" style={{width:'25%'}}>
                         <p className="text-wrapper-7">
-                          Therapy Area/ Mechanism of action
+                        BLA Number
                         </p>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Breast cancer</div>
+                      <div className="value" style={{width:'25%'}}>
+                        <div className="text-wrapper-5">{regulatoryInfo[0]?.blaNumber}</div>
                       </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">BCS Class</div>
+                      <div className="key" style={{width:'25%'}}>
+                        <div className="text-wrapper-6">Latest Indication</div>
                       </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Class II</div>
-                      </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">Label</div>
-                      </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-8">
-                          Latest indication PDF attach
-                        </div>
+                      <div className="value" style={{width:'25%'}}>
+                      <div className="text-wrapper-5"><a href={regulatoryInfo[0]?.latestIndication} target="_blank" rel="noopener noreferrer">{renderTextWithTooltip(regulatoryInfo[0]?.latestIndication, "link")}</a></div>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="div-wrapper-submission">
-                        <div className="text-wrapper-6">Submission</div>
-                      </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Centralized</div>
-                      </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">Review Priority</div>
-                      </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">PRIORITY</div>
-                      </div>
-                      <div className="div-wrapper-7">
-                        <div className="text-wrapper-6">Marketing Status</div>
-                      </div>
-                      <div className="div-wrapper-6">
-                        <div className="text-wrapper-5">Prescription</div>
-                      </div>
-                    </div>
-                    <div className="row">
+                    {/* <div className="regulaory-information-row">
                       <div className="div-wrapper-submission">
                         <div className="text-wrapper-6">Specific Technology if any</div>
                       </div>
                       <div className="div-wrapper-6">
                         <div className="text-wrapper-5">None</div>
                       </div>
-                    </div>
+                      <div className="div-wrapper-7">
+                        <div className="text-wrapper-6">Citizen Petition</div>
+                      </div>
+                      <div className="div-wrapper-6">
+                        <div className="text-wrapper-5">None</div>
+                      </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
-              <div className="div-4" ref={intellectualPropertyPatents}>
+              <div className="intellectual-property-patents" ref={intellectualPropertyPatents}>
                 <div className="headline-wrapper">
                   <div className="headline">
                     <div className="group-3">
@@ -896,18 +614,18 @@ export const AdminPanel = () => {
                     <div className="table">
                       <div className="patentDetailsStartingColumn">
                         <div className="element-3">
-                          <div className="text-wrapper-9">Brand name</div>
+                          <div className="text-wrapper-9" style={{paddingTop: '0px'}}>Brand name</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {ipInfo.map((row: any, index: number) => (
                           <div
                             className={
-                              index == patentData.length - 1
+                              index == ipInfo.length - 1
                                 ? "element-5"
                                 : "element-4"
                             }
                           >
-                            <div className="text-wrapper-10">
-                              {row.BrandName}
+                            <div className="text-wrapper-10" style={{paddingTop: '0px'}}>
+                              {row.brandName}
                             </div>
                           </div>
                         ))}
@@ -919,10 +637,10 @@ export const AdminPanel = () => {
                               Active ingredient
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
-                            <div className={`element-7 ${index === patentData.length-1 ? 'scroll-margin' : ''}`}>
+                          {ipInfo.map((row: any, index: number) => (
+                            <div className={`element-7 ${index === ipInfo.length-1 ? 'scroll-margin' : ''}`}>
                               <div className="text-wrapper-10">
-                                {row.ActiveIngredient}
+                                {row.activeIngredient}
                               </div>
                             </div>
                           ))}
@@ -931,10 +649,10 @@ export const AdminPanel = () => {
                           <div className="element-6">
                             <div className="text-wrapper-9">Type of patent</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: number) => (
                             <div className="element-7">
                               <div className="text-wrapper-10">
-                                {row.TypeOfPatent}
+                                {row.typeOfPatent}
                               </div>
                             </div>
                           ))}
@@ -942,72 +660,72 @@ export const AdminPanel = () => {
                         <div className="div-6">
                           <div className="element-8">
                             <div className="text-wrapper-9">
-                              Equivalent Family
+                            Equivalent Family
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: number) => (
                             <div className="element-9">
                               <div className="text-wrapper-10">
-                                {row.EquivalentFamily}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-8">
-                            <div className="text-wrapper-9">Patent number</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-9">
-                              <div className="text-wrapper-10">
-                                {row.PatentNumber}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-10">
-                            <div className="text-wrapper-9">
-                              Current Assignee
-                            </div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-11">
-                              <div className="text-wrapper-10">
-                                {row.CurrentAssignee}
+                                {row.equivalentFamily}
                               </div>
                             </div>
                           ))}
                         </div>
                         <div className="div-7">
                           <div className="element-12">
-                            <div className="text-wrapper-9">Status</div>
+                            <div className="text-wrapper-9">Patent Number</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row :any, index: any) => (
                             <div className="element-13">
                               <div className="text-wrapper-10">
-                                {row.Status}
+                                {row.patentNumber}
                               </div>
                             </div>
                           ))}
                         </div>
                         <div className="div-6">
                           <div className="element-14">
-                            <div className="text-wrapper-9">SPC</div>
+                            <div className="text-wrapper-9">Current Assignee</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-10">{row.SPC}</div>
+                              <div className="text-wrapper-10">{row.currentAssignee}</div>
                             </div>
                           ))}
                         </div>
                         <div className="div-6">
+                          <div className="element-10">
+                            <div className="text-wrapper-9">
+                              Status
+                            </div>
+                          </div>
+                          {ipInfo.map((row: any, index: number) => (
+                            <div className="element-11">
+                              <div className="text-wrapper-10">
+                                {row.status}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="div-6">
+                          <div className="element-14">
+                            <div className="text-wrapper-9">SPC</div>
+                          </div>
+                          {ipInfo.map((row: any, index: any) => (
+                            <div className="element-15">
+                              <div className="text-wrapper-11">{row.spc}</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="div-6">
                           <div className="element-14">
                             <div className="text-wrapper-9">PED</div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-15">
-                              <div className="text-wrapper-11">{row.PED}</div>
+                              <div className="text-wrapper-11">{row.ped}</div>
                             </div>
                           ))}
                         </div>
@@ -1019,10 +737,10 @@ export const AdminPanel = () => {
                               (inc. PTE PED)
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-11">
                               <div className="text-wrapper-11">
-                                {row.EstimatedExpiry}
+                                {row.estimatedExpiry === 'SPC' ? <a href="#" style={{ color: '#030229', textDecoration: 'underline' }} onClick={() => showModal(index)}>{row.estimatedExpiry}</a> : <div>{row.estimatedExpiry}</div>}
                               </div>
                             </div>
                           ))}
@@ -1033,10 +751,10 @@ export const AdminPanel = () => {
                               Independent claims coverage brief
                             </div>
                           </div>
-                          {patentData.map((row, index) => (
+                          {ipInfo.map((row: any, index: any) => (
                             <div className="element-18">
-                              <div className="text-wrapper-10">
-                                {row.IndependentClaimsCoverageBrief}
+                              <div className="text-wrapper-10" style={{height:'100%'}}>
+                                {renderTextWithTooltip(row.IndependentClaims, "text")}
                               </div>
                             </div>
                           ))}
@@ -1046,21 +764,21 @@ export const AdminPanel = () => {
                         <div className="element-19 w-100">
                           <div
                             className="text-wrapper-9"
-                            style={{ marginTop: "-12px" }}
+                            style={{ marginTop: "-12px", paddingLeft: "0px" }}
                           >
                             Proposed Strategy for PARA IV scenario
                           </div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {ipInfo.map((row: any, index :any) => (
                           <div
                             className={`${
-                              index == patentData.length - 1
+                              index == ipInfo.length - 1
                                 ? "element-21"
                                 : "element-20"
                             } w-100`}
                           >
                             <div className="text-wrapper-10">
-                              {row.ProposedStrategy}
+                              {renderTextWithTooltip(row.proposedStrategyForPARA, "text")}
                             </div>
                           </div>
                         ))}
@@ -1079,7 +797,7 @@ export const AdminPanel = () => {
                         <div className="outer">
                             <div className="inner">
                                 <div id="logo_container" style={{display:'flex'}}>
-                                    <span style={{fontSize:'2.3rem', fontWeight:'700', fontStyle:'normal'}}>60</span>
+                                    <span style={{fontSize:'2.3rem', fontWeight:'700', fontStyle:'normal'}}>{probability[0]?.launchProbability}</span>
                                     <span style={{paddingTop:'15px', fontSize:'1.3rem', fontWeight:'600', fontStyle:'normal'}}>%</span>
                                 </div>
                             </div>
@@ -1091,7 +809,10 @@ export const AdminPanel = () => {
                                     <stop offset="100%" stop-color="#9733EE" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="80" cy="80" r="70" stroke-linecap="round" />
+                            <circle cx="80" cy="80" r="70" stroke-linecap="round"   style={{
+    strokeDashoffset: `${(100 - probability[0]?.launchProbability || 0) * 4.5}px`,
+    // Other inline styles as needed
+  }} />
                         </svg>
                     </div>
                     
@@ -1104,109 +825,18 @@ export const AdminPanel = () => {
                       </div>
                       <div className="text-perception">
                         <div className="flexcontainer">
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              The brand drug&#39;s exclusive marketing rights
-                              prevents generics from launching until November 9,
-                              2026. <br />
-                            </span>
-                          </p>
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              Companies can begin selling generic versions of
-                              the drug after January 10, 2028, after the product
-                              patent EP&#39;124 expires (including any
-                              Supplementary Protection Certificate, which might
-                              be extended by 6 months if a Pediatric Extension
-                              of Data is granted). The generic versions must
-                              have a different composition as in EP&#39;565 and
-                              use a crystalline form other than A covered in
-                              EP&#39; 916, EP&#39;475, both of which cannot
-                              infringe on the original patent. <br />
-                            </span>
-                          </p>
-                          <p className="span-wrapper">
-                            <span className="text-wrapper-16">
-                              Companies can start selling generic versions of
-                              the drug with same crystalline form and
-                              composition after the composition patent
-                              EP&#39;565 expires on May 24, 2036.
-                            </span>
+                          <p className="span-wrapper" style={{whiteSpace: "pre-line"}}>
+                            {probability[0]?.launchPerceptions}
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  {showSCP && (
-                    <div className="div-3">
-                    <div className="div-9 w-100 property-patents-second-table">
-                      <div className="brand-name">
-                        <div className="group-4">
-                          <div className="text-wrapper-17">Brand name</div>
-                        </div>
-                      </div>
-                      <div className="active-ingredient">
-                        <div className="group-5">
-                          <div className="text-wrapper-18">
-                            Active ingredient
-                          </div>
-                        </div>
-                      </div>
-                      <div className="Country">
-                        <div className="group-5">
-                          <div className="text-wrapper-18">COUNTRY</div>
-                        </div>
-                      </div>
-                      <div className="ep">
-                        <div className="title">
-                          <div className="group-6">
-                            <div className="text-wrapper-19">EP1470124</div>
-                          </div>
-                        </div>
-                        <div className="status">
-                          <div className="group-7">
-                            <div className="text-wrapper-20">Status</div>
-                          </div>
-                        </div>
-                        <div className="expiry">
-                          <div className="group-7">
-                            <div className="text-wrapper-20">Expiry</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {patentLastData.map((row, index) => (
-                      <div className="div-9 w-100">
-                        <div
-                          className={`element-23 ${
-                            index == patentLastData.length - 1
-                              ? "round-border-left"
-                              : ""
-                          }`}
-                        >
-                          <div className="text-wrapper-10">IBRANCE</div>
-                        </div>
-                        <div className="element-24">
-                          <div className="text-wrapper-10">PALBOCICLIB</div>
-                        </div>
-                        <div className="element-25" style={{ width: "20%" }}>
-                          <div className="text-wrapper-10">AT</div>
-                        </div>
-                        <div className="element-25" style={{ width: "20%" }}>
-                          <div className="text-wrapper-10">Granted</div>
-                        </div>
-                        <div
-                          className={`element-26 ${
-                            index == patentLastData.length - 1
-                              ? "round-border-right"
-                              : ""
-                          }`}
-                        >
-                          <div className="text-wrapper-10">Jan 10, 2028</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {selectedRowIndex !== null && (
+                    <SpcModal show={selectedRowIndex !== null}
+                    onClose={closeModal}
+                    apnNumber={ipInfo[selectedRowIndex].agencyProductNumber}
+                    ></SpcModal>
                   )}
                 </div>
               </div>
@@ -1472,6 +1102,195 @@ export const AdminPanel = () => {
                   ))}
                 </div>
               </div> */}
+              <div className="div-4" ref={apiManufacturingRef}>
+                <div className="headline-wrapper">
+                  <div className="headline">
+                    <div className="group-3">
+                      <div className="text-wrapper">
+                        API Manufaturing Status
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="table-with-details">
+                  <div className="div-5">
+                    <div className="table">
+                      <div
+                        className="patentDetailsStartingColumn"
+                        style={{ width: "15%" }}
+                      >
+                        <div className="element-3">
+                          <div className="text-wrapper-9">Brand name</div>
+                        </div>
+                        {epLaunchData.map((row, index) => (
+                          <div
+                            className={
+                              index == epLaunchData.length - 1
+                                ? "element-5"
+                                : "element-4"
+                            }
+                          >
+                            <div className="text-wrapper-10">
+                              -
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="column-scroll" style={{ width: "70%" }}>
+                        <div className="div-6" style={{ width: "20%" }}>
+                          <div className="element-6">
+                            <div className="text-wrapper-9">DMF#</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className={`element-7 ${index === epLaunchData.length-1 ? 'scroll-margin' : ''}`}>
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6" style={{ width: "20%" }}>
+                          <div className="element-6">
+                            <div className="text-wrapper-9">Status</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-7">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6" style={{ width: "20%" }}>
+                          <div className="element-8">
+                            <div className="text-wrapper-9">Type</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-9">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6" style={{ width: "20%" }}>
+                          <div className="element-8">
+                            <div className="text-wrapper-9">Submit Date</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-9">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6" style={{ width: "20%" }}>
+                          <div className="element-10">
+                            <div className="text-wrapper-9">Holder</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-11">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="div-7" style={{ width: "15%" }}>
+                          <div className="element-12">
+                            <div className="text-wrapper-9">Status</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-13">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-14">
+                            <div className="text-wrapper-9">SPC</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-15">
+                              <div className="text-wrapper-10">-</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-14">
+                            <div className="text-wrapper-9">PED</div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-15">
+                              <div className="text-wrapper-11">-</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-10">
+                            <div className="text-wrapper-9">
+                              Estimated expiry&nbsp;&nbsp;
+                              <br />
+                              (inc. PTE PED)
+                            </div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-11">
+                              <div className="text-wrapper-11">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="div-6">
+                          <div className="element-17">
+                            <div className="text-wrapper-9">
+                              Independent claims coverage brief
+                            </div>
+                          </div>
+                          {epLaunchData.map((row, index) => (
+                            <div className="element-18">
+                              <div className="text-wrapper-10">
+                                -
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="div-8" style={{ width: "17%" }}>
+                        <div className="element-19 w-100">
+                          <div
+                            className="text-wrapper-9"
+                            style={{ marginTop: "-12px" }}
+                          >
+                            GDUFA Fees Payment
+                          </div>
+                        </div>
+                        {epLaunchData.map((row, index) => (
+                          <div
+                            className={`${
+                              index == epLaunchData.length - 1
+                                ? "element-21"
+                                : "element-20"
+                            } w-100`}
+                          >
+                            <div className="text-wrapper-10">
+                              -
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* <div className="scroll-bar">
+                      <div className="scroll" />
+                    </div> */}
+                  </div>
+                </div>
+              </div>
               <div className="div-4" ref={epLaunch}>
                 <div className="headline-wrapper">
                   <div className="headline">
@@ -1547,37 +1366,37 @@ export const AdminPanel = () => {
                           }`}
                         >
                           <div className="text-wrapper-10">
-                            {row.ActiveIngredients}
+                            -
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "13.7%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">
-                            {row.BrandNames}
+                            -
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "17.6%" }}>
                         <div className="element-34 w-100">
-                          <div className="text-wrapper-10">{row.Strengths}</div>
+                          <div className="text-wrapper-10">-</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "14.7%" }}>
                         <div className="element-34 w-100">
                           <div className="text-wrapper-10">
-                            {row.DosageForm}
+                            -
                           </div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "10%" }}>
                         <div className="element-34 w-100">
-                          <div className="text-wrapper-10">{row.Route}</div>
+                          <div className="text-wrapper-10">-</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "11.7%" }}>
                         <div className="element-34 w-100">
-                          <div className="text-wrapper-10">{row.Country}</div>
+                          <div className="text-wrapper-10">-</div>
                         </div>
                       </div>
                       <div className="div-6" style={{ width: "15.6%" }}>
@@ -1588,200 +1407,11 @@ export const AdminPanel = () => {
                               : ""
                           }`}
                         >
-                          <div className="text-wrapper-10">{row.Marketers}</div>
+                          <div className="text-wrapper-10">-</div>
                         </div>
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-              <div className="div-4" ref={apiManufacturingRef}>
-                <div className="headline-wrapper">
-                  <div className="headline">
-                    <div className="group-3">
-                      <div className="text-wrapper">
-                        API Manufaturing Status
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="table-with-details">
-                  <div className="div-5">
-                    <div className="table">
-                      <div
-                        className="patentDetailsStartingColumn"
-                        style={{ width: "15%" }}
-                      >
-                        <div className="element-3">
-                          <div className="text-wrapper-9">Brand name</div>
-                        </div>
-                        {patentData.map((row, index) => (
-                          <div
-                            className={
-                              index == patentData.length - 1
-                                ? "element-5"
-                                : "element-4"
-                            }
-                          >
-                            <div className="text-wrapper-10">
-                              {row.BrandName}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="column-scroll" style={{ width: "70%" }}>
-                        <div className="div-6" style={{ width: "20%" }}>
-                          <div className="element-6">
-                            <div className="text-wrapper-9">DMF#</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className={`element-7 ${index === patentData.length-1 ? 'scroll-margin' : ''}`}>
-                              <div className="text-wrapper-10">
-                                {row.ActiveIngredient}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6" style={{ width: "20%" }}>
-                          <div className="element-6">
-                            <div className="text-wrapper-9">Status</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-7">
-                              <div className="text-wrapper-10">
-                                {row.TypeOfPatent}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6" style={{ width: "20%" }}>
-                          <div className="element-8">
-                            <div className="text-wrapper-9">Type</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-9">
-                              <div className="text-wrapper-10">
-                                {row.EquivalentFamily}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6" style={{ width: "20%" }}>
-                          <div className="element-8">
-                            <div className="text-wrapper-9">Submit Date</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-9">
-                              <div className="text-wrapper-10">
-                                {row.PatentNumber}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6" style={{ width: "20%" }}>
-                          <div className="element-10">
-                            <div className="text-wrapper-9">Holder</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-11">
-                              <div className="text-wrapper-10">
-                                {row.CurrentAssignee}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="div-7" style={{ width: "15%" }}>
-                          <div className="element-12">
-                            <div className="text-wrapper-9">Status</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-13">
-                              <div className="text-wrapper-10">
-                                {row.Status}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-14">
-                            <div className="text-wrapper-9">SPC</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-15">
-                              <div className="text-wrapper-10">{row.SPC}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-14">
-                            <div className="text-wrapper-9">PED</div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-15">
-                              <div className="text-wrapper-11">{row.PED}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-10">
-                            <div className="text-wrapper-9">
-                              Estimated expiry&nbsp;&nbsp;
-                              <br />
-                              (inc. PTE PED)
-                            </div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-11">
-                              <div className="text-wrapper-11">
-                                {row.EstimatedExpiry}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="div-6">
-                          <div className="element-17">
-                            <div className="text-wrapper-9">
-                              Independent claims coverage brief
-                            </div>
-                          </div>
-                          {patentData.map((row, index) => (
-                            <div className="element-18">
-                              <div className="text-wrapper-10">
-                                {row.IndependentClaimsCoverageBrief}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="div-8" style={{ width: "17%" }}>
-                        <div className="element-19 w-100">
-                          <div
-                            className="text-wrapper-9"
-                            style={{ marginTop: "-12px" }}
-                          >
-                            GDUFA Fees Payment
-                          </div>
-                        </div>
-                        {patentData.map((row, index) => (
-                          <div
-                            className={`${
-                              index == patentData.length - 1
-                                ? "element-21"
-                                : "element-20"
-                            } w-100`}
-                          >
-                            <div className="text-wrapper-10">
-                              {row.ProposedStrategy}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {/* <div className="scroll-bar">
-                      <div className="scroll" />
-                    </div> */}
-                  </div>
                 </div>
               </div>
               <div className="div-4" ref={clinicalTrialsRef}>
@@ -1798,15 +1428,15 @@ export const AdminPanel = () => {
                       <div className="element-3">
                         <div className="text-wrapper-9">Active Ingredients</div>
                       </div>
-                      {patentData.map((row, index) => (
+                      {epLaunchData.map((row, index) => (
                         <div
                           className={
-                            index == patentData.length - 1
+                            index == epLaunchData.length - 1
                               ? "element-5"
                               : "element-4"
                           }
                         >
-                          <div className="text-wrapper-10">{row.BrandName}</div>
+                          <div className="text-wrapper-10">-</div>
                         </div>
                       ))}
                     </div>
@@ -1815,10 +1445,10 @@ export const AdminPanel = () => {
                         <div className="element-6">
                           <div className="text-wrapper-9">EudraCT Number</div>
                         </div>
-                        {patentData.map((row, index) => (
-                          <div className={`element-7 ${index === patentData.length-1 ? 'scroll-margin' : ''}`}>
+                        {epLaunchData.map((row, index) => (
+                          <div className={`element-7 ${index === epLaunchData.length-1 ? 'scroll-margin' : ''}`}>
                             <div className="text-wrapper-10">
-                              {row.ActiveIngredient}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1829,10 +1459,10 @@ export const AdminPanel = () => {
                             National Competent Authority
                           </div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-7">
                             <div className="text-wrapper-10">
-                              {row.TypeOfPatent}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1841,10 +1471,10 @@ export const AdminPanel = () => {
                         <div className="element-8">
                           <div className="text-wrapper-9">Trial Status</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-9">
                             <div className="text-wrapper-10">
-                              {row.EquivalentFamily}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1853,10 +1483,10 @@ export const AdminPanel = () => {
                         <div className="element-8">
                           <div className="text-wrapper-9">Patent number</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-9">
                             <div className="text-wrapper-10">
-                              {row.PatentNumber}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1865,10 +1495,10 @@ export const AdminPanel = () => {
                         <div className="element-10">
                           <div className="text-wrapper-9">Current Assignee</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-11">
                             <div className="text-wrapper-10">
-                              {row.CurrentAssignee}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1877,9 +1507,9 @@ export const AdminPanel = () => {
                         <div className="element-12">
                           <div className="text-wrapper-9">Status</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-13">
-                            <div className="text-wrapper-10">{row.Status}</div>
+                            <div className="text-wrapper-10">-</div>
                           </div>
                         ))}
                       </div>
@@ -1887,9 +1517,9 @@ export const AdminPanel = () => {
                         <div className="element-14">
                           <div className="text-wrapper-9">SPC</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-15">
-                            <div className="text-wrapper-10">{row.SPC}</div>
+                            <div className="text-wrapper-10">-</div>
                           </div>
                         ))}
                       </div>
@@ -1897,9 +1527,9 @@ export const AdminPanel = () => {
                         <div className="element-14">
                           <div className="text-wrapper-9">PED</div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-15">
-                            <div className="text-wrapper-11">{row.PED}</div>
+                            <div className="text-wrapper-11">-</div>
                           </div>
                         ))}
                       </div>
@@ -1911,10 +1541,10 @@ export const AdminPanel = () => {
                             (inc. PTE PED)
                           </div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-11">
                             <div className="text-wrapper-11">
-                              {row.EstimatedExpiry}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1925,10 +1555,10 @@ export const AdminPanel = () => {
                             Independent claims coverage brief
                           </div>
                         </div>
-                        {patentData.map((row, index) => (
+                        {epLaunchData.map((row, index) => (
                           <div className="element-18">
                             <div className="text-wrapper-10">
-                              {row.IndependentClaimsCoverageBrief}
+                              -
                             </div>
                           </div>
                         ))}
@@ -1943,16 +1573,16 @@ export const AdminPanel = () => {
                           Proposed Strategy for PARA IV scenario
                         </div>
                       </div>
-                      {patentData.map((row, index) => (
+                      {epLaunchData.map((row, index) => (
                         <div
                           className={`${
-                            index == patentData.length - 1
+                            index == epLaunchData.length - 1
                               ? "element-21"
                               : "element-20"
                           } w-100`}
                         >
                           <div className="text-wrapper-10">
-                            {row.ProposedStrategy}
+                            -
                           </div>
                         </div>
                       ))}
